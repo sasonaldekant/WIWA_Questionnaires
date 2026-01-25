@@ -1,0 +1,5 @@
+{
+  "Server": "localhost",
+  "Database": "WIWA_DB_NEW",
+  "TrustedConnection": true
+}

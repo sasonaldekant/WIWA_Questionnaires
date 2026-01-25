@@ -1,0 +1,6 @@
+{
+    "tfa.dashboard.gaugeStyle": "semi-arc",
+    "tfa.dashboard.viewMode": "groups",
+    "tfa.dashboard.includeSecondaryModels": true,
+    "tfa.dashboard.showUserInfoCard": false
+}

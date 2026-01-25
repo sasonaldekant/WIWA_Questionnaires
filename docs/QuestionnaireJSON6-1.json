@@ -1,0 +1,1748 @@
+{
+	"questionnaire": "{\"id\":1,\"typeName\":\"Upitnik lokacije - podaci za PremiumRateMatrix\"}",
+	"questions": [
+		{
+			"*": {
+				"QuestionID": 1,
+				"QuestionText": "Da li se na lokaciji skladište zalihe robe",
+				"QuestionLabel": "1",
+				"QuestionOrder": 1,
+				"QuestionFormatID": 2,
+				"QuestionFormatName": "Radio button input",
+				"UiControl": "input",
+				"Answers": [
+					{
+						"PredefinedAnswerID": 1,
+						"Answer": "Da",
+						"Code": "DA",
+						"PreSelected": false,
+						"SubQuestions": [
+							{
+								"*": {
+									"QuestionID": 2,
+									"QuestionText": "Da li se skladište zapaljive materije (boje i lakovi, ulja, alkoholi, razređivači, nafta i goriva, pirotehnika, zemni gas, industrijski plin, materije podložne samozapaljenju i sl.)",
+									"QuestionLabel": "1.1",
+									"QuestionOrder": 2,
+									"QuestionFormatID": 2,
+									"QuestionFormatName": "Radio button input",
+									"UiControl": "input",
+									"SubAnswers": [
+										{
+											"PredefinedAnswerID": 3,
+											"Answer": "Da",
+											"Code": "DA",
+											"PreSelected": false
+										},
+										{
+											"PredefinedAnswerID": 4,
+											"Answer": "Ne",
+											"Code": "NE",
+											"PreSelected": false,
+											"SubQuestions": [
+												{
+													"*": {
+														"QuestionID": 3,
+														"QuestionText": "Da li se skladište voće, povrće, gvožđe, kamena roba, cementni proizvodi, šljunak i sl.",
+														"QuestionLabel": "1.1.1",
+														"QuestionFormatName": "Radio button input",
+														"UiControl": "input",
+														"SubAnswers": [
+															{
+																"PredefinedAnswerID": 5,
+																"Answer": "Da",
+																"Code": "DA",
+																"PreSelected": false
+															},
+															{
+																"PredefinedAnswerID": 6,
+																"Answer": "Ne",
+																"Code": "NE",
+																"PreSelected": false
+															}
+														]
+													}
+												}
+											]
+										}
+									]
+								}
+							}
+						]
+					},
+					{
+						"PredefinedAnswerID": 2,
+						"Answer": "Ne",
+						"Code": "NE",
+						"PreSelected": false
+					}
+				]
+			}
+		},
+		{
+			"*": {
+				"QuestionID": 9,
+				"QuestionText": "Građevinska kategorija",
+				"QuestionLabel": "2",
+				"QuestionOrder": 4,
+				"QuestionFormatID": 2,
+				"QuestionFormatName": "Radio button input",
+				"UiControl": "input",
+				"SpecificQuestionTypeID": 3,
+				"SpecificQuestionType": "Computed",
+				"ReadOnly": true,
+				"Answers": [
+					{
+						"PredefinedAnswerID": 25,
+						"Answer": "Masivna",
+						"Code": "8",
+						"PreSelected": false,
+						"SubQuestions": [
+							{
+								"*": {
+									"QuestionID": 7,
+									"QuestionText": "Izaberite spratnost objekta",
+									"QuestionLabel": "2.4",
+									"QuestionOrder": 8,
+									"QuestionFormatID": 2,
+									"QuestionFormatName": "Radio button input",
+									"UiControl": "input",
+									"SpecificQuestionType": "ConditionallyVisible",
+									"SubAnswers": [
+										{
+											"PredefinedAnswerID": 15,
+											"Answer": "Prizemne i jednospratne zgrade",
+											"Code": "4",
+											"PreSelected": false
+										},
+										{
+											"PredefinedAnswerID": 16,
+											"Answer": "Zgrade sa dva i više sprata",
+											"Code": "5",
+											"PreSelected": false
+										}
+									]
+								}
+							}
+						]
+					},
+					{
+						"PredefinedAnswerID": 26,
+						"Answer": "Polumasivna",
+						"Code": "6",
+						"PreSelected": false
+					},
+					{
+						"PredefinedAnswerID": 27,
+						"Answer": "Laka",
+						"Code": "7",
+						"PreSelected": false
+					}
+				]
+			}
+		},
+		{
+			"*": {
+				"QuestionID": 8,
+				"QuestionText": "Klasa zaštitnih mera - udaljenost vatrogasne jedinice",
+				"QuestionLabel": "3",
+				"QuestionOrder": 9,
+				"QuestionFormatID": 2,
+				"QuestionFormatName": "Radio button input",
+				"UiControl": "input",
+				"Answers": [
+					{
+						"PredefinedAnswerID": 17,
+						"Answer": "A - do 15 min (do 15 km)",
+						"Code": "1",
+						"PreSelected": false
+					},
+					{
+						"PredefinedAnswerID": 18,
+						"Answer": "B - 15 do 30 min (15-30 km)",
+						"Code": "2",
+						"PreSelected": false
+					},
+					{
+						"PredefinedAnswerID": 19,
+						"Answer": "C - preko 30 min (preko 30 km)",
+						"Code": "3",
+						"PreSelected": false
+					}
+				]
+			}
+		},
+		{
+			"*": {
+				"QuestionID": 4,
+				"QuestionText": "Građevinska kategorija - Spoljašnji zidovi",
+				"QuestionLabel": "2.1",
+				"QuestionOrder": 5,
+				"ParentQuestionID": 9,
+				"QuestionFormatID": 2,
+				"QuestionFormatName": "Radio button input",
+				"UiControl": "input",
+				"SpecificQuestionTypeID": 1,
+				"SpecificQuestionType": "AlwaysVisible",
+				"ReadOnly": false,
+				"Answers": [
+					{
+						"PredefinedAnswerID": 7,
+						"Answer": "Kamen / opeka / cigla / beton",
+						"Code": "1",
+						"PreSelected": false
+					},
+					{
+						"PredefinedAnswerID": 8,
+						"Answer": "Metalni sendvič paneli",
+						"Code": "2",
+						"PreSelected": false
+					},
+					{
+						"PredefinedAnswerID": 9,
+						"Answer": "Drvo i drugi gorivi i slabi materijali",
+						"Code": "3",
+						"PreSelected": false
+					}
+				]
+			}
+		},
+		{
+			"*": {
+				"QuestionID": 5,
+				"QuestionText": "Građevinska kategorija - Krovni pokrivač",
+				"QuestionLabel": "2.2",
+				"QuestionOrder": 6,
+				"ParentQuestionID": 9,
+				"QuestionFormatID": 2,
+				"QuestionFormatName": "Radio button input",
+				"UiControl": "input",
+				"SpecificQuestionTypeID": 1,
+				"SpecificQuestionType": "AlwaysVisible",
+				"ReadOnly": false,
+				"Answers": [
+					{
+						"PredefinedAnswerID": 10,
+						"Answer": "Beton / crep / salonit / eternit / lim",
+						"Code": "1",
+						"PreSelected": false
+					},
+					{
+						"PredefinedAnswerID": 11,
+						"Answer": "Drvo / trska / slama / plastika",
+						"Code": "2",
+						"PreSelected": false
+					}
+				]
+			}
+		},
+		{
+			"*": {
+				"QuestionID": 6,
+				"QuestionText": "Građevinska kategorija - Konstrukcija objekta",
+				"QuestionLabel": "2.3",
+				"QuestionOrder": 7,
+				"ParentQuestionID": 9,
+				"QuestionFormatID": 2,
+				"QuestionFormatName": "Radio button input",
+				"UiControl": "input",
+				"SpecificQuestionTypeID": 1,
+				"SpecificQuestionType": "AlwaysVisible",
+				"ReadOnly": false,
+				"Answers": [
+					{
+						"PredefinedAnswerID": 12,
+						"Answer": "Armirano-betonske konstrukcije",
+						"Code": "1",
+						"PreSelected": false
+					},
+					{
+						"PredefinedAnswerID": 13,
+						"Answer": "Čelična konstrukcija",
+						"Code": "2",
+						"PreSelected": false
+					},
+					{
+						"PredefinedAnswerID": 14,
+						"Answer": "Drvena konstrukcija",
+						"Code": "3",
+						"PreSelected": false
+					}
+				]
+			}
+		}
+	],
+	"referenceMappings": [
+		{
+			"QuestionID": 4,
+			"TableName": "ExternalWallMaterials",
+			"ReferenceColumnName": "ExternalWallMaterialID"
+		},
+		{
+			"QuestionID": 5,
+			"TableName": "RoofCoveringMaterials",
+			"ReferenceColumnName": "RoofCoveringMaterialID"
+		},
+		{
+			"QuestionID": 6,
+			"TableName": "ConstructionMaterials",
+			"ReferenceColumnName": "ConstructionMaterialID"
+		},
+		{
+			"QuestionID": 7,
+			"TableName": "ConstructionTypes",
+			"ReferenceColumnName": "ConstructionTypeID"
+		},
+		{
+			"QuestionID": 8,
+			"TableName": "ProtectionClasses",
+			"ReferenceColumnName": "ProtectionClassID"
+		},
+		{
+			"QuestionID": 9,
+			"TableName": "ConstructionTypes",
+			"ReferenceColumnName": "ConstructionTypeID"
+		}
+	],
+	"matrices": {
+		"BuildingCategoryMatrix": [
+			{
+				"id": 1,
+				"ConstructionMaterialID": 2,
+				"ExternalWallMaterialID": 2,
+				"RoofCoveringMaterialID": 1,
+				"ConstructionTypeID": 6
+			},
+			{
+				"id": 6,
+				"ConstructionMaterialID": 2,
+				"ExternalWallMaterialID": 1,
+				"RoofCoveringMaterialID": 2,
+				"ConstructionTypeID": 7
+			},
+			{
+				"id": 7,
+				"ConstructionMaterialID": 3,
+				"ExternalWallMaterialID": 2,
+				"RoofCoveringMaterialID": 2,
+				"ConstructionTypeID": 7
+			},
+			{
+				"id": 4,
+				"ConstructionMaterialID": 1,
+				"ExternalWallMaterialID": 3,
+				"RoofCoveringMaterialID": 1,
+				"ConstructionTypeID": 7
+			},
+			{
+				"id": 8,
+				"ConstructionMaterialID": 2,
+				"ExternalWallMaterialID": 3,
+				"RoofCoveringMaterialID": 1,
+				"ConstructionTypeID": 7
+			},
+			{
+				"id": 9,
+				"ConstructionMaterialID": 3,
+				"ExternalWallMaterialID": 3,
+				"RoofCoveringMaterialID": 2,
+				"ConstructionTypeID": 7
+			},
+			{
+				"id": 2,
+				"ConstructionMaterialID": 1,
+				"ExternalWallMaterialID": 1,
+				"RoofCoveringMaterialID": 1,
+				"ConstructionTypeID": 8
+			},
+			{
+				"id": 5,
+				"ConstructionMaterialID": 2,
+				"ExternalWallMaterialID": 1,
+				"RoofCoveringMaterialID": 1,
+				"ConstructionTypeID": 8
+			},
+			{
+				"id": 3,
+				"ConstructionMaterialID": 1,
+				"ExternalWallMaterialID": 2,
+				"RoofCoveringMaterialID": 1,
+				"ConstructionTypeID": 8
+			}
+		],
+		"PremiumRateMatrix": [
+			{
+				"id": 1,
+				"ConstructionTypeID": 1,
+				"ProtectionClassID": 1,
+				"TariffPropertyTypeID": 12,
+				"PremiumRate": 1.67
+			},
+			{
+				"id": 2,
+				"ConstructionTypeID": 2,
+				"ProtectionClassID": 1,
+				"TariffPropertyTypeID": 12,
+				"PremiumRate": 2.67
+			},
+			{
+				"id": 3,
+				"ConstructionTypeID": 3,
+				"ProtectionClassID": 1,
+				"TariffPropertyTypeID": 12,
+				"PremiumRate": 3.88
+			},
+			{
+				"id": 4,
+				"ConstructionTypeID": 1,
+				"ProtectionClassID": 2,
+				"TariffPropertyTypeID": 12,
+				"PremiumRate": 1.78
+			},
+			{
+				"id": 5,
+				"ConstructionTypeID": 2,
+				"ProtectionClassID": 2,
+				"TariffPropertyTypeID": 12,
+				"PremiumRate": 3.22
+			},
+			{
+				"id": 6,
+				"ConstructionTypeID": 3,
+				"ProtectionClassID": 2,
+				"TariffPropertyTypeID": 12,
+				"PremiumRate": 4.67
+			},
+			{
+				"id": 7,
+				"ConstructionTypeID": 1,
+				"ProtectionClassID": 3,
+				"TariffPropertyTypeID": 12,
+				"PremiumRate": 2.0
+			},
+			{
+				"id": 8,
+				"ConstructionTypeID": 2,
+				"ProtectionClassID": 3,
+				"TariffPropertyTypeID": 12,
+				"PremiumRate": 3.78
+			},
+			{
+				"id": 9,
+				"ConstructionTypeID": 3,
+				"ProtectionClassID": 3,
+				"TariffPropertyTypeID": 12,
+				"PremiumRate": 5.56
+			},
+			{
+				"id": 10,
+				"ConstructionTypeID": 1,
+				"ProtectionClassID": 1,
+				"TariffPropertyTypeID": 13,
+				"PremiumRate": 1.67
+			},
+			{
+				"id": 11,
+				"ConstructionTypeID": 2,
+				"ProtectionClassID": 1,
+				"TariffPropertyTypeID": 13,
+				"PremiumRate": 2.67
+			},
+			{
+				"id": 12,
+				"ConstructionTypeID": 3,
+				"ProtectionClassID": 1,
+				"TariffPropertyTypeID": 13,
+				"PremiumRate": 3.88
+			},
+			{
+				"id": 13,
+				"ConstructionTypeID": 1,
+				"ProtectionClassID": 2,
+				"TariffPropertyTypeID": 13,
+				"PremiumRate": 1.78
+			},
+			{
+				"id": 14,
+				"ConstructionTypeID": 2,
+				"ProtectionClassID": 2,
+				"TariffPropertyTypeID": 13,
+				"PremiumRate": 3.22
+			},
+			{
+				"id": 15,
+				"ConstructionTypeID": 3,
+				"ProtectionClassID": 2,
+				"TariffPropertyTypeID": 13,
+				"PremiumRate": 4.67
+			},
+			{
+				"id": 16,
+				"ConstructionTypeID": 1,
+				"ProtectionClassID": 3,
+				"TariffPropertyTypeID": 13,
+				"PremiumRate": 2.0
+			},
+			{
+				"id": 17,
+				"ConstructionTypeID": 2,
+				"ProtectionClassID": 3,
+				"TariffPropertyTypeID": 13,
+				"PremiumRate": 3.78
+			},
+			{
+				"id": 18,
+				"ConstructionTypeID": 3,
+				"ProtectionClassID": 3,
+				"TariffPropertyTypeID": 13,
+				"PremiumRate": 5.56
+			},
+			{
+				"id": 19,
+				"ConstructionTypeID": 1,
+				"ProtectionClassID": 1,
+				"TariffPropertyTypeID": 14,
+				"PremiumRate": 1.67
+			},
+			{
+				"id": 20,
+				"ConstructionTypeID": 2,
+				"ProtectionClassID": 1,
+				"TariffPropertyTypeID": 14,
+				"PremiumRate": 2.67
+			},
+			{
+				"id": 21,
+				"ConstructionTypeID": 3,
+				"ProtectionClassID": 1,
+				"TariffPropertyTypeID": 14,
+				"PremiumRate": 3.88
+			},
+			{
+				"id": 22,
+				"ConstructionTypeID": 1,
+				"ProtectionClassID": 2,
+				"TariffPropertyTypeID": 14,
+				"PremiumRate": 1.78
+			},
+			{
+				"id": 23,
+				"ConstructionTypeID": 2,
+				"ProtectionClassID": 2,
+				"TariffPropertyTypeID": 14,
+				"PremiumRate": 3.22
+			},
+			{
+				"id": 24,
+				"ConstructionTypeID": 3,
+				"ProtectionClassID": 2,
+				"TariffPropertyTypeID": 14,
+				"PremiumRate": 4.67
+			},
+			{
+				"id": 25,
+				"ConstructionTypeID": 1,
+				"ProtectionClassID": 3,
+				"TariffPropertyTypeID": 14,
+				"PremiumRate": 2.0
+			},
+			{
+				"id": 26,
+				"ConstructionTypeID": 2,
+				"ProtectionClassID": 3,
+				"TariffPropertyTypeID": 14,
+				"PremiumRate": 3.78
+			},
+			{
+				"id": 27,
+				"ConstructionTypeID": 3,
+				"ProtectionClassID": 3,
+				"TariffPropertyTypeID": 14,
+				"PremiumRate": 5.56
+			},
+			{
+				"id": 28,
+				"ConstructionTypeID": 1,
+				"ProtectionClassID": 1,
+				"TariffPropertyTypeID": 15,
+				"PremiumRate": 1.67
+			},
+			{
+				"id": 29,
+				"ConstructionTypeID": 2,
+				"ProtectionClassID": 1,
+				"TariffPropertyTypeID": 15,
+				"PremiumRate": 2.67
+			},
+			{
+				"id": 30,
+				"ConstructionTypeID": 3,
+				"ProtectionClassID": 1,
+				"TariffPropertyTypeID": 15,
+				"PremiumRate": 3.88
+			},
+			{
+				"id": 31,
+				"ConstructionTypeID": 1,
+				"ProtectionClassID": 2,
+				"TariffPropertyTypeID": 15,
+				"PremiumRate": 1.78
+			},
+			{
+				"id": 32,
+				"ConstructionTypeID": 2,
+				"ProtectionClassID": 2,
+				"TariffPropertyTypeID": 15,
+				"PremiumRate": 3.22
+			},
+			{
+				"id": 33,
+				"ConstructionTypeID": 3,
+				"ProtectionClassID": 2,
+				"TariffPropertyTypeID": 15,
+				"PremiumRate": 4.67
+			},
+			{
+				"id": 34,
+				"ConstructionTypeID": 1,
+				"ProtectionClassID": 3,
+				"TariffPropertyTypeID": 15,
+				"PremiumRate": 2.0
+			},
+			{
+				"id": 35,
+				"ConstructionTypeID": 2,
+				"ProtectionClassID": 3,
+				"TariffPropertyTypeID": 15,
+				"PremiumRate": 3.78
+			},
+			{
+				"id": 36,
+				"ConstructionTypeID": 3,
+				"ProtectionClassID": 3,
+				"TariffPropertyTypeID": 15,
+				"PremiumRate": 5.56
+			},
+			{
+				"id": 37,
+				"ConstructionTypeID": 1,
+				"ProtectionClassID": 1,
+				"TariffPropertyTypeID": 16,
+				"PremiumRate": 1.67
+			},
+			{
+				"id": 38,
+				"ConstructionTypeID": 2,
+				"ProtectionClassID": 1,
+				"TariffPropertyTypeID": 16,
+				"PremiumRate": 2.67
+			},
+			{
+				"id": 39,
+				"ConstructionTypeID": 3,
+				"ProtectionClassID": 1,
+				"TariffPropertyTypeID": 16,
+				"PremiumRate": 3.88
+			},
+			{
+				"id": 40,
+				"ConstructionTypeID": 1,
+				"ProtectionClassID": 2,
+				"TariffPropertyTypeID": 16,
+				"PremiumRate": 1.78
+			},
+			{
+				"id": 41,
+				"ConstructionTypeID": 2,
+				"ProtectionClassID": 2,
+				"TariffPropertyTypeID": 16,
+				"PremiumRate": 3.22
+			},
+			{
+				"id": 42,
+				"ConstructionTypeID": 3,
+				"ProtectionClassID": 2,
+				"TariffPropertyTypeID": 16,
+				"PremiumRate": 4.67
+			},
+			{
+				"id": 43,
+				"ConstructionTypeID": 1,
+				"ProtectionClassID": 3,
+				"TariffPropertyTypeID": 16,
+				"PremiumRate": 2.0
+			},
+			{
+				"id": 44,
+				"ConstructionTypeID": 2,
+				"ProtectionClassID": 3,
+				"TariffPropertyTypeID": 16,
+				"PremiumRate": 3.78
+			},
+			{
+				"id": 45,
+				"ConstructionTypeID": 3,
+				"ProtectionClassID": 3,
+				"TariffPropertyTypeID": 16,
+				"PremiumRate": 5.56
+			},
+			{
+				"id": 46,
+				"ConstructionTypeID": 1,
+				"ProtectionClassID": 1,
+				"TariffPropertyTypeID": 17,
+				"PremiumRate": 1.67
+			},
+			{
+				"id": 47,
+				"ConstructionTypeID": 2,
+				"ProtectionClassID": 1,
+				"TariffPropertyTypeID": 17,
+				"PremiumRate": 2.67
+			},
+			{
+				"id": 48,
+				"ConstructionTypeID": 3,
+				"ProtectionClassID": 1,
+				"TariffPropertyTypeID": 17,
+				"PremiumRate": 3.88
+			},
+			{
+				"id": 49,
+				"ConstructionTypeID": 1,
+				"ProtectionClassID": 2,
+				"TariffPropertyTypeID": 17,
+				"PremiumRate": 1.78
+			},
+			{
+				"id": 50,
+				"ConstructionTypeID": 2,
+				"ProtectionClassID": 2,
+				"TariffPropertyTypeID": 17,
+				"PremiumRate": 3.22
+			},
+			{
+				"id": 51,
+				"ConstructionTypeID": 3,
+				"ProtectionClassID": 2,
+				"TariffPropertyTypeID": 17,
+				"PremiumRate": 4.67
+			},
+			{
+				"id": 52,
+				"ConstructionTypeID": 1,
+				"ProtectionClassID": 3,
+				"TariffPropertyTypeID": 17,
+				"PremiumRate": 2.0
+			},
+			{
+				"id": 53,
+				"ConstructionTypeID": 2,
+				"ProtectionClassID": 3,
+				"TariffPropertyTypeID": 17,
+				"PremiumRate": 3.78
+			},
+			{
+				"id": 54,
+				"ConstructionTypeID": 3,
+				"ProtectionClassID": 3,
+				"TariffPropertyTypeID": 17,
+				"PremiumRate": 5.56
+			},
+			{
+				"id": 55,
+				"ConstructionTypeID": 4,
+				"ProtectionClassID": 1,
+				"TariffPropertyTypeID": 18,
+				"PremiumRate": 0.4
+			},
+			{
+				"id": 56,
+				"ConstructionTypeID": 5,
+				"ProtectionClassID": 1,
+				"TariffPropertyTypeID": 18,
+				"PremiumRate": 0.3
+			},
+			{
+				"id": 57,
+				"ConstructionTypeID": 6,
+				"ProtectionClassID": 1,
+				"TariffPropertyTypeID": 18,
+				"PremiumRate": 1.2
+			},
+			{
+				"id": 58,
+				"ConstructionTypeID": 7,
+				"ProtectionClassID": 1,
+				"TariffPropertyTypeID": 18,
+				"PremiumRate": 3.0
+			},
+			{
+				"id": 59,
+				"ConstructionTypeID": 4,
+				"ProtectionClassID": 2,
+				"TariffPropertyTypeID": 18,
+				"PremiumRate": 0.8
+			},
+			{
+				"id": 60,
+				"ConstructionTypeID": 5,
+				"ProtectionClassID": 2,
+				"TariffPropertyTypeID": 18,
+				"PremiumRate": 0.6
+			},
+			{
+				"id": 61,
+				"ConstructionTypeID": 6,
+				"ProtectionClassID": 2,
+				"TariffPropertyTypeID": 18,
+				"PremiumRate": 2.2
+			},
+			{
+				"id": 62,
+				"ConstructionTypeID": 7,
+				"ProtectionClassID": 2,
+				"TariffPropertyTypeID": 18,
+				"PremiumRate": 4.0
+			},
+			{
+				"id": 63,
+				"ConstructionTypeID": 4,
+				"ProtectionClassID": 3,
+				"TariffPropertyTypeID": 18,
+				"PremiumRate": 1.2
+			},
+			{
+				"id": 64,
+				"ConstructionTypeID": 5,
+				"ProtectionClassID": 3,
+				"TariffPropertyTypeID": 18,
+				"PremiumRate": 0.8
+			},
+			{
+				"id": 65,
+				"ConstructionTypeID": 6,
+				"ProtectionClassID": 3,
+				"TariffPropertyTypeID": 18,
+				"PremiumRate": 3.2
+			},
+			{
+				"id": 66,
+				"ConstructionTypeID": 7,
+				"ProtectionClassID": 3,
+				"TariffPropertyTypeID": 18,
+				"PremiumRate": 5.0
+			},
+			{
+				"id": 67,
+				"ConstructionTypeID": 4,
+				"ProtectionClassID": 1,
+				"TariffPropertyTypeID": 19,
+				"PremiumRate": 0.4
+			},
+			{
+				"id": 68,
+				"ConstructionTypeID": 5,
+				"ProtectionClassID": 1,
+				"TariffPropertyTypeID": 19,
+				"PremiumRate": 0.3
+			},
+			{
+				"id": 69,
+				"ConstructionTypeID": 6,
+				"ProtectionClassID": 1,
+				"TariffPropertyTypeID": 19,
+				"PremiumRate": 1.2
+			},
+			{
+				"id": 70,
+				"ConstructionTypeID": 7,
+				"ProtectionClassID": 1,
+				"TariffPropertyTypeID": 19,
+				"PremiumRate": 3.0
+			},
+			{
+				"id": 71,
+				"ConstructionTypeID": 4,
+				"ProtectionClassID": 2,
+				"TariffPropertyTypeID": 19,
+				"PremiumRate": 0.8
+			},
+			{
+				"id": 72,
+				"ConstructionTypeID": 5,
+				"ProtectionClassID": 2,
+				"TariffPropertyTypeID": 19,
+				"PremiumRate": 0.6
+			},
+			{
+				"id": 73,
+				"ConstructionTypeID": 6,
+				"ProtectionClassID": 2,
+				"TariffPropertyTypeID": 19,
+				"PremiumRate": 2.2
+			},
+			{
+				"id": 74,
+				"ConstructionTypeID": 7,
+				"ProtectionClassID": 2,
+				"TariffPropertyTypeID": 19,
+				"PremiumRate": 4.0
+			},
+			{
+				"id": 75,
+				"ConstructionTypeID": 4,
+				"ProtectionClassID": 3,
+				"TariffPropertyTypeID": 19,
+				"PremiumRate": 1.2
+			},
+			{
+				"id": 76,
+				"ConstructionTypeID": 5,
+				"ProtectionClassID": 3,
+				"TariffPropertyTypeID": 19,
+				"PremiumRate": 0.8
+			},
+			{
+				"id": 77,
+				"ConstructionTypeID": 6,
+				"ProtectionClassID": 3,
+				"TariffPropertyTypeID": 19,
+				"PremiumRate": 3.2
+			},
+			{
+				"id": 78,
+				"ConstructionTypeID": 7,
+				"ProtectionClassID": 3,
+				"TariffPropertyTypeID": 19,
+				"PremiumRate": 5.0
+			},
+			{
+				"id": 79,
+				"ConstructionTypeID": 4,
+				"ProtectionClassID": 1,
+				"TariffPropertyTypeID": 20,
+				"PremiumRate": 0.4
+			},
+			{
+				"id": 80,
+				"ConstructionTypeID": 5,
+				"ProtectionClassID": 1,
+				"TariffPropertyTypeID": 20,
+				"PremiumRate": 0.3
+			},
+			{
+				"id": 81,
+				"ConstructionTypeID": 6,
+				"ProtectionClassID": 1,
+				"TariffPropertyTypeID": 20,
+				"PremiumRate": 1.2
+			},
+			{
+				"id": 82,
+				"ConstructionTypeID": 7,
+				"ProtectionClassID": 1,
+				"TariffPropertyTypeID": 20,
+				"PremiumRate": 3.0
+			},
+			{
+				"id": 83,
+				"ConstructionTypeID": 4,
+				"ProtectionClassID": 2,
+				"TariffPropertyTypeID": 20,
+				"PremiumRate": 0.8
+			},
+			{
+				"id": 84,
+				"ConstructionTypeID": 5,
+				"ProtectionClassID": 2,
+				"TariffPropertyTypeID": 20,
+				"PremiumRate": 0.6
+			},
+			{
+				"id": 85,
+				"ConstructionTypeID": 6,
+				"ProtectionClassID": 2,
+				"TariffPropertyTypeID": 20,
+				"PremiumRate": 2.2
+			},
+			{
+				"id": 86,
+				"ConstructionTypeID": 7,
+				"ProtectionClassID": 2,
+				"TariffPropertyTypeID": 20,
+				"PremiumRate": 4.0
+			},
+			{
+				"id": 87,
+				"ConstructionTypeID": 4,
+				"ProtectionClassID": 3,
+				"TariffPropertyTypeID": 20,
+				"PremiumRate": 1.2
+			},
+			{
+				"id": 88,
+				"ConstructionTypeID": 5,
+				"ProtectionClassID": 3,
+				"TariffPropertyTypeID": 20,
+				"PremiumRate": 0.8
+			},
+			{
+				"id": 89,
+				"ConstructionTypeID": 6,
+				"ProtectionClassID": 3,
+				"TariffPropertyTypeID": 20,
+				"PremiumRate": 3.2
+			},
+			{
+				"id": 90,
+				"ConstructionTypeID": 7,
+				"ProtectionClassID": 3,
+				"TariffPropertyTypeID": 20,
+				"PremiumRate": 5.0
+			},
+			{
+				"id": 91,
+				"ConstructionTypeID": 4,
+				"ProtectionClassID": 1,
+				"TariffPropertyTypeID": 21,
+				"PremiumRate": 0.4
+			},
+			{
+				"id": 92,
+				"ConstructionTypeID": 5,
+				"ProtectionClassID": 1,
+				"TariffPropertyTypeID": 21,
+				"PremiumRate": 0.3
+			},
+			{
+				"id": 93,
+				"ConstructionTypeID": 6,
+				"ProtectionClassID": 1,
+				"TariffPropertyTypeID": 21,
+				"PremiumRate": 1.2
+			},
+			{
+				"id": 94,
+				"ConstructionTypeID": 7,
+				"ProtectionClassID": 1,
+				"TariffPropertyTypeID": 21,
+				"PremiumRate": 3.0
+			},
+			{
+				"id": 95,
+				"ConstructionTypeID": 4,
+				"ProtectionClassID": 2,
+				"TariffPropertyTypeID": 21,
+				"PremiumRate": 0.8
+			},
+			{
+				"id": 96,
+				"ConstructionTypeID": 5,
+				"ProtectionClassID": 2,
+				"TariffPropertyTypeID": 21,
+				"PremiumRate": 0.6
+			},
+			{
+				"id": 97,
+				"ConstructionTypeID": 6,
+				"ProtectionClassID": 2,
+				"TariffPropertyTypeID": 21,
+				"PremiumRate": 2.2
+			},
+			{
+				"id": 98,
+				"ConstructionTypeID": 7,
+				"ProtectionClassID": 2,
+				"TariffPropertyTypeID": 21,
+				"PremiumRate": 4.0
+			},
+			{
+				"id": 99,
+				"ConstructionTypeID": 4,
+				"ProtectionClassID": 3,
+				"TariffPropertyTypeID": 21,
+				"PremiumRate": 1.2
+			},
+			{
+				"id": 100,
+				"ConstructionTypeID": 5,
+				"ProtectionClassID": 3,
+				"TariffPropertyTypeID": 21,
+				"PremiumRate": 0.8
+			},
+			{
+				"id": 101,
+				"ConstructionTypeID": 6,
+				"ProtectionClassID": 3,
+				"TariffPropertyTypeID": 21,
+				"PremiumRate": 3.2
+			},
+			{
+				"id": 102,
+				"ConstructionTypeID": 7,
+				"ProtectionClassID": 3,
+				"TariffPropertyTypeID": 21,
+				"PremiumRate": 5.0
+			},
+			{
+				"id": 103,
+				"ConstructionTypeID": 4,
+				"ProtectionClassID": 1,
+				"TariffPropertyTypeID": 22,
+				"PremiumRate": 0.4
+			},
+			{
+				"id": 104,
+				"ConstructionTypeID": 5,
+				"ProtectionClassID": 1,
+				"TariffPropertyTypeID": 22,
+				"PremiumRate": 0.3
+			},
+			{
+				"id": 105,
+				"ConstructionTypeID": 6,
+				"ProtectionClassID": 1,
+				"TariffPropertyTypeID": 22,
+				"PremiumRate": 1.2
+			},
+			{
+				"id": 106,
+				"ConstructionTypeID": 7,
+				"ProtectionClassID": 1,
+				"TariffPropertyTypeID": 22,
+				"PremiumRate": 3.0
+			},
+			{
+				"id": 107,
+				"ConstructionTypeID": 4,
+				"ProtectionClassID": 2,
+				"TariffPropertyTypeID": 22,
+				"PremiumRate": 0.8
+			},
+			{
+				"id": 108,
+				"ConstructionTypeID": 5,
+				"ProtectionClassID": 2,
+				"TariffPropertyTypeID": 22,
+				"PremiumRate": 0.6
+			},
+			{
+				"id": 109,
+				"ConstructionTypeID": 6,
+				"ProtectionClassID": 2,
+				"TariffPropertyTypeID": 22,
+				"PremiumRate": 2.2
+			},
+			{
+				"id": 110,
+				"ConstructionTypeID": 7,
+				"ProtectionClassID": 2,
+				"TariffPropertyTypeID": 22,
+				"PremiumRate": 4.0
+			},
+			{
+				"id": 111,
+				"ConstructionTypeID": 4,
+				"ProtectionClassID": 3,
+				"TariffPropertyTypeID": 22,
+				"PremiumRate": 1.2
+			},
+			{
+				"id": 112,
+				"ConstructionTypeID": 5,
+				"ProtectionClassID": 3,
+				"TariffPropertyTypeID": 22,
+				"PremiumRate": 0.8
+			},
+			{
+				"id": 113,
+				"ConstructionTypeID": 6,
+				"ProtectionClassID": 3,
+				"TariffPropertyTypeID": 22,
+				"PremiumRate": 3.2
+			},
+			{
+				"id": 114,
+				"ConstructionTypeID": 7,
+				"ProtectionClassID": 3,
+				"TariffPropertyTypeID": 22,
+				"PremiumRate": 5.0
+			},
+			{
+				"id": 115,
+				"ConstructionTypeID": 4,
+				"ProtectionClassID": 1,
+				"TariffPropertyTypeID": 23,
+				"PremiumRate": 0.4
+			},
+			{
+				"id": 116,
+				"ConstructionTypeID": 5,
+				"ProtectionClassID": 1,
+				"TariffPropertyTypeID": 23,
+				"PremiumRate": 0.3
+			},
+			{
+				"id": 117,
+				"ConstructionTypeID": 6,
+				"ProtectionClassID": 1,
+				"TariffPropertyTypeID": 23,
+				"PremiumRate": 1.2
+			},
+			{
+				"id": 118,
+				"ConstructionTypeID": 7,
+				"ProtectionClassID": 1,
+				"TariffPropertyTypeID": 23,
+				"PremiumRate": 3.0
+			},
+			{
+				"id": 119,
+				"ConstructionTypeID": 4,
+				"ProtectionClassID": 2,
+				"TariffPropertyTypeID": 23,
+				"PremiumRate": 0.8
+			},
+			{
+				"id": 120,
+				"ConstructionTypeID": 5,
+				"ProtectionClassID": 2,
+				"TariffPropertyTypeID": 23,
+				"PremiumRate": 0.6
+			},
+			{
+				"id": 121,
+				"ConstructionTypeID": 6,
+				"ProtectionClassID": 2,
+				"TariffPropertyTypeID": 23,
+				"PremiumRate": 2.2
+			},
+			{
+				"id": 122,
+				"ConstructionTypeID": 7,
+				"ProtectionClassID": 2,
+				"TariffPropertyTypeID": 23,
+				"PremiumRate": 4.0
+			},
+			{
+				"id": 123,
+				"ConstructionTypeID": 4,
+				"ProtectionClassID": 3,
+				"TariffPropertyTypeID": 23,
+				"PremiumRate": 1.2
+			},
+			{
+				"id": 124,
+				"ConstructionTypeID": 5,
+				"ProtectionClassID": 3,
+				"TariffPropertyTypeID": 23,
+				"PremiumRate": 0.8
+			},
+			{
+				"id": 125,
+				"ConstructionTypeID": 6,
+				"ProtectionClassID": 3,
+				"TariffPropertyTypeID": 23,
+				"PremiumRate": 3.2
+			},
+			{
+				"id": 126,
+				"ConstructionTypeID": 7,
+				"ProtectionClassID": 3,
+				"TariffPropertyTypeID": 23,
+				"PremiumRate": 5.0
+			},
+			{
+				"id": 127,
+				"ConstructionTypeID": 8,
+				"HazardClassID": 1,
+				"ProtectionClassID": 1,
+				"TariffPropertyTypeID": 28,
+				"PremiumRate": 0.5
+			},
+			{
+				"id": 128,
+				"ConstructionTypeID": 8,
+				"HazardClassID": 1,
+				"ProtectionClassID": 2,
+				"TariffPropertyTypeID": 28,
+				"PremiumRate": 0.6
+			},
+			{
+				"id": 129,
+				"ConstructionTypeID": 8,
+				"HazardClassID": 1,
+				"ProtectionClassID": 3,
+				"TariffPropertyTypeID": 28,
+				"PremiumRate": 0.8
+			},
+			{
+				"id": 130,
+				"ConstructionTypeID": 6,
+				"HazardClassID": 1,
+				"ProtectionClassID": 1,
+				"TariffPropertyTypeID": 28,
+				"PremiumRate": 1.1
+			},
+			{
+				"id": 131,
+				"ConstructionTypeID": 6,
+				"HazardClassID": 1,
+				"ProtectionClassID": 2,
+				"TariffPropertyTypeID": 28,
+				"PremiumRate": 1.7
+			},
+			{
+				"id": 132,
+				"ConstructionTypeID": 6,
+				"HazardClassID": 1,
+				"ProtectionClassID": 3,
+				"TariffPropertyTypeID": 28,
+				"PremiumRate": 2.8
+			},
+			{
+				"id": 133,
+				"ConstructionTypeID": 7,
+				"HazardClassID": 1,
+				"ProtectionClassID": 1,
+				"TariffPropertyTypeID": 28,
+				"PremiumRate": 2.3
+			},
+			{
+				"id": 134,
+				"ConstructionTypeID": 7,
+				"HazardClassID": 1,
+				"ProtectionClassID": 2,
+				"TariffPropertyTypeID": 28,
+				"PremiumRate": 2.9
+			},
+			{
+				"id": 135,
+				"ConstructionTypeID": 7,
+				"HazardClassID": 1,
+				"ProtectionClassID": 3,
+				"TariffPropertyTypeID": 28,
+				"PremiumRate": 3.4
+			},
+			{
+				"id": 136,
+				"ConstructionTypeID": 8,
+				"HazardClassID": 2,
+				"ProtectionClassID": 1,
+				"TariffPropertyTypeID": 28,
+				"PremiumRate": 0.8
+			},
+			{
+				"id": 137,
+				"ConstructionTypeID": 8,
+				"HazardClassID": 2,
+				"ProtectionClassID": 2,
+				"TariffPropertyTypeID": 28,
+				"PremiumRate": 1.1
+			},
+			{
+				"id": 138,
+				"ConstructionTypeID": 8,
+				"HazardClassID": 2,
+				"ProtectionClassID": 3,
+				"TariffPropertyTypeID": 28,
+				"PremiumRate": 2.0
+			},
+			{
+				"id": 139,
+				"ConstructionTypeID": 6,
+				"HazardClassID": 2,
+				"ProtectionClassID": 1,
+				"TariffPropertyTypeID": 28,
+				"PremiumRate": 2.0
+			},
+			{
+				"id": 140,
+				"ConstructionTypeID": 6,
+				"HazardClassID": 2,
+				"ProtectionClassID": 2,
+				"TariffPropertyTypeID": 28,
+				"PremiumRate": 2.7
+			},
+			{
+				"id": 141,
+				"ConstructionTypeID": 6,
+				"HazardClassID": 2,
+				"ProtectionClassID": 3,
+				"TariffPropertyTypeID": 28,
+				"PremiumRate": 2.9
+			},
+			{
+				"id": 142,
+				"ConstructionTypeID": 7,
+				"HazardClassID": 2,
+				"ProtectionClassID": 1,
+				"TariffPropertyTypeID": 28,
+				"PremiumRate": 3.5
+			},
+			{
+				"id": 143,
+				"ConstructionTypeID": 7,
+				"HazardClassID": 2,
+				"ProtectionClassID": 2,
+				"TariffPropertyTypeID": 28,
+				"PremiumRate": 4.0
+			},
+			{
+				"id": 144,
+				"ConstructionTypeID": 7,
+				"HazardClassID": 2,
+				"ProtectionClassID": 3,
+				"TariffPropertyTypeID": 28,
+				"PremiumRate": 5.1
+			},
+			{
+				"id": 145,
+				"ConstructionTypeID": 8,
+				"HazardClassID": 3,
+				"ProtectionClassID": 1,
+				"TariffPropertyTypeID": 28,
+				"PremiumRate": 2.3
+			},
+			{
+				"id": 146,
+				"ConstructionTypeID": 8,
+				"HazardClassID": 3,
+				"ProtectionClassID": 2,
+				"TariffPropertyTypeID": 28,
+				"PremiumRate": 2.9
+			},
+			{
+				"id": 147,
+				"ConstructionTypeID": 8,
+				"HazardClassID": 3,
+				"ProtectionClassID": 3,
+				"TariffPropertyTypeID": 28,
+				"PremiumRate": 3.4
+			},
+			{
+				"id": 148,
+				"ConstructionTypeID": 6,
+				"HazardClassID": 3,
+				"ProtectionClassID": 1,
+				"TariffPropertyTypeID": 28,
+				"PremiumRate": 3.2
+			},
+			{
+				"id": 149,
+				"ConstructionTypeID": 6,
+				"HazardClassID": 3,
+				"ProtectionClassID": 2,
+				"TariffPropertyTypeID": 28,
+				"PremiumRate": 3.7
+			},
+			{
+				"id": 150,
+				"ConstructionTypeID": 6,
+				"HazardClassID": 3,
+				"ProtectionClassID": 3,
+				"TariffPropertyTypeID": 28,
+				"PremiumRate": 4.6
+			},
+			{
+				"id": 151,
+				"ConstructionTypeID": 7,
+				"HazardClassID": 3,
+				"ProtectionClassID": 1,
+				"TariffPropertyTypeID": 28,
+				"PremiumRate": 4.6
+			},
+			{
+				"id": 152,
+				"ConstructionTypeID": 7,
+				"HazardClassID": 3,
+				"ProtectionClassID": 2,
+				"TariffPropertyTypeID": 28,
+				"PremiumRate": 5.8
+			},
+			{
+				"id": 153,
+				"ConstructionTypeID": 7,
+				"HazardClassID": 3,
+				"ProtectionClassID": 3,
+				"TariffPropertyTypeID": 28,
+				"PremiumRate": 6.9
+			}
+		]
+	},
+	"referenceTables": {
+		"ConstructionMaterials": [
+			{
+				"id": 1,
+				"name": "Armirano - betonske konstrukcije"
+			},
+			{
+				"id": 2,
+				"name": "Čelična konstrukcija"
+			},
+			{
+				"id": 3,
+				"name": "Drvena konstrukcija"
+			}
+		],
+		"ExternalWallMaterials": [
+			{
+				"id": 1,
+				"name": "Kamen / opeka cigla / beton"
+			},
+			{
+				"id": 2,
+				"name": "Metalni sendvič paneli"
+			},
+			{
+				"id": 3,
+				"name": "Drvo i drugi gorivi i slabi materijali"
+			}
+		],
+		"RoofCoveringMaterials": [
+			{
+				"id": 1,
+				"name": "Beton / crep / salonit / eternit / lim"
+			},
+			{
+				"id": 2,
+				"name": "Drvo / trska / slama / plastika"
+			}
+		],
+		"ConstructionTypes": [
+			{
+				"id": 1,
+				"name": "75% ili više vrednosti građevinskih objekata iz masivne kategorije"
+			},
+			{
+				"id": 2,
+				"name": "60-70% vrednosti građevinskih objekata iz masivne kategorije, ili ako je 75% i više objekata iz mešovite kategorije ili masivne i mešovite kategorije"
+			},
+			{
+				"id": 3,
+				"name": "Ostala poljoprivredna gazdinstva"
+			},
+			{
+				"id": 4,
+				"name": "Masivna - Prizemne i jednospratne zgrade"
+			},
+			{
+				"id": 5,
+				"name": "Masivna - Zgrade sa dva i više spratova"
+			},
+			{
+				"id": 6,
+				"name": "Mešovita"
+			},
+			{
+				"id": 7,
+				"name": "Slaba"
+			},
+			{
+				"id": 8,
+				"name": "Masivna"
+			}
+		],
+		"HazardClasses": [
+			{
+				"id": 1,
+				"name": "Klasa opasnosti robe I"
+			},
+			{
+				"id": 2,
+				"name": "Klasa opasnosti robe II"
+			},
+			{
+				"id": 3,
+				"name": "Klasa opasnosti robe II"
+			}
+		],
+		"ProtectionClasses": [
+			{
+				"id": 1,
+				"Code": "a"
+			},
+			{
+				"id": 2,
+				"Code": "b"
+			},
+			{
+				"id": 3,
+				"Code": "c"
+			}
+		],
+		"MethodsOfContracting": [
+			{
+				"id": 1,
+				"name": "na neispcrpivi prvi rizik"
+			},
+			{
+				"id": 2,
+				"name": "na iscrpivi prvi rizik"
+			},
+			{
+				"id": 3,
+				"name": "na sumu osiguranja s primenom načela podosiguranja"
+			},
+			{
+				"id": 4,
+				"name": "na taksiranu vrednost"
+			},
+			{
+				"id": 5,
+				"name": "na sumu osiguranja sa isključenom primenom načela podosiguranja"
+			},
+			{
+				"id": 6,
+				"name": "na ugovorenu vrednost, odnosno knjigovodstvenu nabavnu (bruto) vrednost"
+			},
+			{
+				"id": 7,
+				"name": "na svakovremenu stvarnu vrednost predmeta osiguranja"
+			},
+			{
+				"id": 8,
+				"name": "na novu vrednost, odnosno novonabavnu vrednost predmeta osiguranja"
+			}
+		],
+		"StorageAreas": [
+			{
+				"id": 1,
+				"name": "U zaključanim vatrostalnim trezorima i blagajnama"
+			},
+			{
+				"id": 2,
+				"name": "U zaključanim pancer blagajnama ili zaključanim uzidanim sefovima"
+			},
+			{
+				"id": 3,
+				"name": "U ostalim zaključanim smestištima "
+			},
+			{
+				"id": 4,
+				"name": "Prizemne i jednospratne zgrade"
+			},
+			{
+				"id": 5,
+				"name": "Zgrade sa dva i više sprata"
+			}
+		],
+		"TariffPropertyTypes": [
+			{
+				"id": 12,
+				"name": "SVI GRAĐEVINSKI OBJEKTI poljoprivrednog gazdinstva (stambeni, pomoćni i poljoprivredni izuzimajući objekat peradarske farme)."
+			},
+			{
+				"id": 13,
+				"name": "SVE STVARI DOMAĆINSTVA (Nameštaj, kućne mašine, uređaji i aparati koji nisu namenjeni obavljanju neke delatnosti, stvari za ličnu upotrebu i potrošnju članova domaćinstva). Osiguranjem nisu obuhvaćeni gotov novac i hartije od vrednosti, dragocenosti, umetnički predmeti, zbirke i antikviteti."
+			},
+			{
+				"id": 14,
+				"name": "SVE POLJOPRIVREDNE POKRETNOSTI (Nesamohodne poljoprivredne mašine i alat, zaprežna kola i pribor, bačve, burad, građevinski materijal za vlastitu upotrebu, veštačko đubrivo, zaštitna sredstva, komponente za ishranu životinja, pčelarski pribor i slično)."
+			},
+			{
+				"id": 15,
+				"name": "SVE ŽIVOTINJE (kopitari, goveda, svinje, sitna stoka, pitomi zečevi, košnice, živina)."
+			},
+			{
+				"id": 16,
+				"name": "SVI POLJOPRIVREDNI PROIZVODI (žitarice u zrnu, seno, slama, industrijsko i krmno bilje, voće, povrće, vino, rakija i ostalo)."
+			},
+			{
+				"id": 17,
+				"name": "Prikolice, samohodne mašine i traktori (Marka, tip, registarski broj) i to:"
+			},
+			{
+				"id": 18,
+				"name": "null"
+			},
+			{
+				"id": 19
+			},
+			{
+				"id": 20,
+				"name": "Za način osiguranja: Prema knjigovodstvenoj evidenciji - Pokretnosti (nameštaj, mašine, uređaji i aparati) evidentirane u knjigovodstvu osiguranika na dan nastanka osiguranog slučaja, smeštene na otvorenom prostoru Prema spisku -  Pokretnosti (nameštaj, mašine, uređaji i aparati) prema spisku smeštene na otvorenom prostoru"
+			},
+			{
+				"id": 21,
+				"name": "Za način osiguranja: Prema knjigovodstvenoj evidenciji - Oprema (nameštaj, mašine, uređaji i aparati) evidentirana u knjigovodstvu osiguranika na dan nastanka osiguranog slučaja, smeštena u zatvorenom  Prema spisku -  Oprema (nameštaj, mašine, uređaji i aparati) prema spisku smeštena u zatvorenom "
+			},
+			{
+				"id": 22
+			},
+			{
+				"id": 23,
+				"name": "Zalihe sitnog inventara i potrošnog materijala"
+			},
+			{
+				"id": 24
+			},
+			{
+				"id": 25
+			},
+			{
+				"id": 26
+			},
+			{
+				"id": 27
+			},
+			{
+				"id": 28
+			},
+			{
+				"id": 29
+			},
+			{
+				"id": 30,
+				"name": "Za način osiguranja: Prema knjigovodstvenoj evidenciji - Oprema (nameštaj, mašine, uređaji i aparati) evidentirana u knjigovodstvu osiguranika na dan nastanka osiguranog slučaja, smeštena u zatvorenom Prema spisku -  Oprema (nameštaj, mašine, uređaji i aparati) prema spisku smeštena u zatvorenom "
+			},
+			{
+				"id": 31,
+				"name": "Za način osiguranja: Prema knjigovodstvenoj evidenciji - Pokretnosti (nameštaj, mašine, uređaji i aparati) evidentirane u knjigovodstvu osiguranika na dan nastanka osiguranog slučaja, smeštene na otvorenom prostoru Prema spisku -  Pokretnosti (nameštaj, mašine, uređaji i aparati) prema spisku smeštene na otvorenom prostoru"
+			},
+			{
+				"id": 32,
+				"name": "Zalihe robe evidentirane u knjigovodstvu osiguranika na dan nastanka osiguranog slučaja, smeštene u zatvorenom"
+			},
+			{
+				"id": 33
+			},
+			{
+				"id": 34
+			},
+			{
+				"id": 35
+			},
+			{
+				"id": 36
+			},
+			{
+				"id": 37
+			},
+			{
+				"id": 38
+			},
+			{
+				"id": 39
+			},
+			{
+				"id": 40
+			},
+			{
+				"id": 41
+			},
+			{
+				"id": 42
+			},
+			{
+				"id": 43
+			},
+			{
+				"id": 44
+			},
+			{
+				"id": 45
+			}
+		]
+	}
+}

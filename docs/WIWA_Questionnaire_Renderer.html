@@ -1,0 +1,647 @@
+<!doctype html>
+<html lang="sr">
+
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>WIWA Questionnaire – JSON-driven renderer</title>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap');
+
+    :root {
+      --font-family: 'Inter', system-ui, -apple-system, sans-serif;
+      --primary: #0056b3;
+      --bg: #f3f4f6;
+      --card-bg: #ffffff;
+      --border: #e5e7eb;
+      --text: #1f2937;
+      --text-muted: #6b7280;
+      --shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
+    }
+
+    body {
+      margin: 0;
+      background: var(--bg);
+      color: var(--text);
+      font-family: var(--font-family);
+      line-height: 1.5;
+    }
+
+    header {
+      padding: 16px 20px;
+      background: var(--card-bg);
+      border-bottom: 1px solid var(--border);
+      box-shadow: 0 1px 2px 0 rgb(0 0 0 / 0.05);
+    }
+
+    header h1 {
+      margin: 0 0 8px 0;
+      font-size: 18px;
+      font-weight: 600;
+      color: var(--text);
+    }
+
+    header .sub {
+      font-size: 13px;
+      color: var(--text-muted);
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+      align-items: center;
+    }
+
+    main {
+      padding: 24px 20px 80px;
+      max-width: 1024px;
+      margin: 0 auto;
+    }
+
+    .card {
+      background: var(--card-bg);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 20px;
+      margin-bottom: 16px;
+      box-shadow: var(--shadow);
+    }
+
+    .row {
+      display: flex;
+      gap: 12px;
+      flex-wrap: wrap;
+      align-items: center;
+    }
+
+    .pill {
+      border: 1px solid var(--border);
+      padding: 4px 10px;
+      border-radius: 999px;
+      font-size: 12px;
+      font-weight: 500;
+      color: var(--text);
+      background: #f9fafb;
+    }
+
+    .muted {
+      color: var(--text-muted);
+      font-size: 13px;
+    }
+
+    .q {
+      padding: 16px;
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      margin: 12px 0;
+      background: #fff;
+      transition: box-shadow 0.2s;
+    }
+
+    .q:focus-within {
+      border-color: var(--primary);
+      box-shadow: 0 0 0 2px rgba(0, 86, 179, 0.1);
+    }
+
+    .q.readonly {
+      background: #f9fafb;
+      border-style: dashed;
+    }
+
+    .hdr {
+      margin-bottom: 12px;
+      display: flex;
+      justify-content: space-between;
+      align-items: baseline;
+    }
+
+    .title {
+      font-weight: 600;
+      font-size: 15px;
+      color: #111;
+    }
+
+    .answers {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    .answer-item {
+      display: flex;
+      flex-direction: column;
+    }
+
+    .input-row {
+      display: flex;
+      gap: 10px;
+      align-items: flex-start;
+      cursor: pointer;
+      padding: 6px 0;
+    }
+
+    .input-row:hover .ans-text {
+      color: var(--primary);
+    }
+
+    input[type="radio"],
+    input[type="checkbox"] {
+      margin-top: 3px;
+      accent-color: var(--primary);
+      width: 16px;
+      height: 16px;
+      cursor: pointer;
+    }
+
+    .ans-text {
+      font-size: 14px;
+      font-weight: 500;
+    }
+
+    .ans-meta {
+      font-size: 12px;
+      color: #9ca3af;
+      margin-left: 26px;
+    }
+
+    /* Sub-question container: Animates height */
+    .sub-q-container {
+      margin-left: 26px;
+      padding-left: 12px;
+      border-left: 2px solid #e5e7eb;
+      overflow: hidden;
+      /* Simple assumption for animation */
+    }
+
+    .sub-q-container:empty {
+      display: none;
+    }
+
+    /* Toolbar */
+    .toolbar {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+
+    button {
+      border: 1px solid var(--border);
+      background: #fff;
+      border-radius: 6px;
+      padding: 8px 12px;
+      font-size: 13px;
+      cursor: pointer;
+      font-weight: 500;
+      transition: all 0.2s;
+    }
+
+    button:hover {
+      background: #f3f4f6;
+      border-color: #d1d5db;
+    }
+
+    button.primary {
+      background: var(--primary);
+      color: white;
+      border-color: var(--primary);
+    }
+
+    button.primary:hover {
+      background: #004494;
+    }
+
+    pre {
+      background: #111827;
+      color: #e5e7eb;
+      padding: 16px;
+      border-radius: 8px;
+      overflow: auto;
+      font-size: 12px;
+      font-family: 'Menlo', 'Monaco', monospace;
+    }
+
+    .two-col {
+      display: grid;
+      gap: 20px;
+      grid-template-columns: 2fr 1fr;
+    }
+
+    @media(max-width: 768px) {
+      .two-col {
+        grid-template-columns: 1fr;
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <header>
+    <h1>WIWA Questionnaire – Modern Renderer</h1>
+    <div class="sub">
+      <span class="pill" id="qTitle">No questionnaire loaded</span>
+      <div class="toolbar">
+        <input id="fileInput" type="file" accept=".json,application/json" style="font-size:12px;" />
+        <button id="resetBtn">Reset</button>
+        <button id="exportBtn" class="primary">Export JSON</button>
+      </div>
+    </div>
+  </header>
+
+  <main>
+    <div class="two-col">
+      <section>
+        <div id="formHost"></div>
+      </section>
+
+      <aside>
+        <div class="card">
+          <div style="font-weight:600; margin-bottom:10px;">Debug State</div>
+          <pre id="debugState">{}</pre>
+        </div>
+      </aside>
+    </div>
+  </main>
+
+  <script>
+    /**
+     * STATE STRUCTURE:
+     * STATE = {
+     *   [QuestionID]: {
+     *     kind: 'radio' | 'checkbox' | 'text' | ...,
+     *     value: "some text" (for inputs),
+     *     selection: { 
+     *        [AnswerID]: { code: "1.1", text: "..." } 
+     *     }
+     *   }
+     * }
+     */
+    let WIWA = null;
+    let STATE = {};
+    let QUESTION_INDEX = new Map();
+
+    const el = (tag, attrs = {}, children = []) => {
+      const n = document.createElement(tag);
+      for (const [k, v] of Object.entries(attrs)) {
+        if (v === null || v === undefined) continue;
+        if (k === "class") n.className = v;
+        else if (k === "text") n.textContent = v;
+        else if (k.startsWith("on") && typeof v === "function") n.addEventListener(k.slice(2), v);
+        else n.setAttribute(k, v);
+      }
+      for (const c of children) {
+        if (typeof c === "string") n.appendChild(document.createTextNode(c));
+        else if (c) n.appendChild(c);
+      }
+      return n;
+    };
+
+    // --- JSON LOADING ---
+
+    function readFileAsJson(file) {
+      return new Promise((resolve, reject) => {
+        const fr = new FileReader();
+        fr.onload = () => { try { resolve(JSON.parse(fr.result)); } catch (e) { reject(e); } };
+        fr.onerror = () => reject(fr.error);
+        fr.readAsText(file);
+      });
+    }
+
+    async function loadJson(json) {
+      if (!json || !json.questions) throw new Error("Invalid JSON");
+      WIWA = json;
+
+      // Build Index
+      QUESTION_INDEX.clear();
+      const walk = (node) => {
+        const q = node["*"] ? node["*"] : node;
+        if (!q || typeof q.QuestionID !== 'number') return;
+        QUESTION_INDEX.set(q.QuestionID, q);
+
+        // Recurse
+        (q.Children || []).forEach(walk);
+        const answers = q.Answers || q.SubAnswers || [];
+        answers.forEach(a => {
+          if (a.SubQuestions) a.SubQuestions.forEach(walk);
+        });
+      };
+      (json.questions || []).forEach(walk);
+
+      // Render Roots
+      renderRoots();
+
+      // Update Meta
+      document.getElementById("qTitle").textContent = (WIWA.questionnaire && WIWA.questionnaire.typeName) || "Loaded";
+      updateDebug();
+    }
+
+    // --- RENDERING CORE ---
+
+    function renderRoots() {
+      // Collect roots (those without ParentQuestionID and not subquestions implied)
+      // Actually, just render the top-level 'questions' array from JSON results.
+      const host = document.getElementById("formHost");
+      host.innerHTML = "";
+
+      const roots = WIWA.questions || [];
+      // Note: Sort by order if needed, but JSON usually sorted.
+      roots.forEach(r => {
+        host.appendChild(renderQuestion(r));
+      });
+    }
+
+    function renderQuestion(node) {
+      const q = node["*"] ? node["*"] : node;
+      const qid = q.QuestionID;
+      const control = getUiControl(q);
+
+      const container = el("div", { class: "q", id: `q_card_${qid}` });
+      if (q.ReadOnly) container.classList.add("readonly");
+
+      // Header
+      const label = q.QuestionLabel ? `[${q.QuestionLabel}] ` : "";
+      container.appendChild(el("div", { class: "hdr" }, [
+        el("div", { class: "title", text: label + q.QuestionText }),
+        el("span", { class: "muted", text: `${control} (ID:${qid})` })
+      ]));
+
+      // Body
+      const body = el("div", { class: "answers" });
+
+      if (control === "checkbox" || control === "radio") {
+        const answers = q.Answers || q.SubAnswers || [];
+        answers.forEach(a => {
+          body.appendChild(renderAnswerRow(q, a, control));
+        });
+      }
+      else if (control === "text" || control === "textarea" || control === "input") {
+        const isArea = control === "textarea";
+        const input = el(isArea ? "textarea" : "input", {
+          class: "input-box",
+          style: "width: 100%; padding: 8px; border: 1px solid #ccc; border-radius: 4px;",
+          rows: isArea ? 3 : null,
+          id: `input_${qid}`,
+          disabled: q.ReadOnly ? "disabled" : null
+        });
+
+        // Initial State
+        if (STATE[qid] && STATE[qid].value) input.value = STATE[qid].value;
+
+        input.addEventListener("input", (e) => {
+          updateStateValue(qid, control, e.target.value);
+        });
+
+        body.appendChild(input);
+      }
+      else if (control === "select") {
+        // Dropdown implementation can be added here similar to inputs
+        const sel = el("select", { style: "width: 100%; padding: 8px;" });
+        sel.appendChild(el("option", { value: "" }, ["-- Izaberite --"]));
+        const answers = q.Answers || q.SubAnswers || [];
+        answers.forEach(a => {
+          sel.appendChild(el("option", { value: String(a.PredefinedAnswerID) }, [a.Answer]));
+        });
+        sel.addEventListener("change", (e) => {
+          // Logic for select single
+          handleSelectionChange(q, answers.find(x => String(x.PredefinedAnswerID) === e.target.value), 'radio');
+        });
+        body.appendChild(sel);
+      }
+
+      container.appendChild(body);
+
+      // Children (Grouping)
+      if (q.Children && q.Children.length > 0) {
+        const childWrap = el("div", { style: "margin-top: 16px; border-top: 1px dashed #eee; padding-top:10px;" });
+        q.Children.forEach(c => {
+          childWrap.appendChild(renderQuestion(c));
+        });
+        container.appendChild(childWrap);
+      }
+
+      return container;
+    }
+
+    function renderAnswerRow(q, ans, type) {
+      const qid = q.QuestionID;
+      const aid = ans.PredefinedAnswerID;
+      const inputId = `ans_${qid}_${aid}`;
+
+      const wrap = el("div", { class: "answer-item" });
+
+      const input = el("input", {
+        type: type,
+        id: inputId,
+        name: `grp_${qid}`,
+        value: String(aid),
+        disabled: q.ReadOnly ? "disabled" : null
+      });
+
+      // Pre-select if state exists
+      if (STATE[qid] && STATE[qid].selection && STATE[qid].selection[aid]) {
+        input.checked = true;
+        // Note: sub-questions should be rendered if checked!
+        // We defer this content loading to "mount" time or simple check below.
+        // But since we are creating DOM fresh, we need to append existing subqs.
+        // We'll handle this by triggering logic after creation or manual check.
+      }
+      else if (ans.PreSelected) {
+        // If JSON says pre-selected, we should reflect that but ONLY if no user state exists?
+        // For now, let's treat STATE as source of truth.
+      }
+
+      const label = el("label", { class: "input-row", for: inputId }, [
+        input,
+        el("div", { style: "margin-left:8px;" }, [
+          el("div", { class: "ans-text", text: ans.Answer }),
+          // el("div", { class: "ans-meta", text: `Code: ${ans.Code}` })
+        ])
+      ]);
+
+      const subContainer = el("div", { class: "sub-q-container", id: `sub_cont_${aid}` });
+
+      // Event Listener
+      input.addEventListener("change", (e) => {
+        handleSelectionChange(q, ans, type, e.target.checked);
+      });
+
+      wrap.appendChild(label);
+      wrap.appendChild(subContainer);
+
+      // Immediate Render of SubQuestions if checked (re-hydration)
+      if (input.checked && ans.SubQuestions && ans.SubQuestions.length > 0) {
+        ans.SubQuestions.forEach(sq => {
+          subContainer.appendChild(renderQuestion(sq));
+        });
+      }
+
+      return wrap;
+    }
+
+    // --- LOGIC ---
+
+    function getUiControl(q) {
+      const fmt = (q.UiControl || q.QuestionFormatName || q.SubQuestionFormat || "").toLowerCase();
+      if (fmt.includes("check")) return "checkbox";
+      if (fmt.includes("radio")) return "radio";
+      if (fmt.includes("area")) return "textarea";
+      if (fmt.includes("select") || fmt.includes("drop")) return "select";
+      return "text";
+    }
+
+    function updateStateValue(qid, kind, val) {
+      if (!STATE[qid]) STATE[qid] = { kind, value: "", selection: {} };
+      STATE[qid].value = val;
+      updateDebug();
+    }
+
+    /**
+     * Handles Checkbox/Radio toggle.
+     * @param q Question Node
+     * @param ans Answer Node
+     * @param type 'checkbox' | 'radio'
+     * @param isChecked boolean
+     */
+    function handleSelectionChange(q, ans, type, isChecked) {
+      const qid = q.QuestionID;
+      const aid = ans.PredefinedAnswerID;
+
+      // Init State
+      if (!STATE[qid]) STATE[qid] = { kind: type, selection: {} };
+
+      if (type === 'radio') {
+        // Clear other selections for this Q
+        const oldSelection = STATE[qid].selection;
+        Object.keys(oldSelection).forEach(oldAid => {
+          if (String(oldAid) !== String(aid)) {
+            // Logic to clear sub-questions for oldAid
+            // We need to find the DOM container and empty it
+            recursiveClearSubQuestions(qid, oldAid);
+
+            // Also uncheck DOM element if possible (though radio does this naturally)
+          }
+        });
+
+        // Set new
+        STATE[qid].selection = {};
+        STATE[qid].selection[aid] = { code: ans.Code, text: ans.Answer };
+
+        // Render SubQuestions
+        updateSubQuestionDOM(ans, true);
+      }
+      else if (type === 'checkbox') {
+        if (isChecked) {
+          STATE[qid].selection[aid] = { code: ans.Code, text: ans.Answer };
+          updateSubQuestionDOM(ans, true);
+        } else {
+          delete STATE[qid].selection[aid];
+          recursiveClearSubQuestions(qid, aid);
+          updateSubQuestionDOM(ans, false);
+        }
+      }
+
+      updateDebug();
+    }
+
+    function updateSubQuestionDOM(ans, show) {
+      const aid = ans.PredefinedAnswerID;
+      const cont = document.getElementById(`sub_cont_${aid}`);
+      if (!cont) return;
+
+      if (show) {
+        // Avoid duplicates
+        if (cont.hasChildNodes()) return;
+
+        if (ans.SubQuestions && ans.SubQuestions.length > 0) {
+          ans.SubQuestions.forEach(sq => {
+            cont.appendChild(renderQuestion(sq));
+          });
+        }
+      } else {
+        cont.innerHTML = "";
+      }
+    }
+
+    /**
+     * key logic: When we uncheck an answer, we must find all its SubQuestions
+     * and delete them from STATE.
+     */
+    function recursiveClearSubQuestions(parentQid, parentAnsId) {
+      // We can't easily find the object graph from ID without the Index or keeping ref.
+      // But we can traverse DOM or use QUESTION_INDEX if we map Answers also?
+      // Easier: traverse the JSON structure from QUESTION_INDEX.
+
+      const qNode = QUESTION_INDEX.get(parentQid);
+      if (!qNode) return;
+
+      const answers = qNode.Answers || qNode.SubAnswers || [];
+      const targetAns = answers.find(a => String(a.PredefinedAnswerID) === String(parentAnsId));
+
+      if (targetAns && targetAns.SubQuestions) {
+        targetAns.SubQuestions.forEach(sq => {
+          const sqNode = sq["*"] ? sq["*"] : sq;
+          deleteStateForQuestionRecursively(sqNode);
+        });
+      }
+    }
+
+    function deleteStateForQuestionRecursively(q) {
+      if (!q) return;
+      const qid = q.QuestionID;
+
+      // Identify currently selected answers to recurse deeper before deleting
+      if (STATE[qid] && STATE[qid].selection) {
+        Object.keys(STATE[qid].selection).forEach(aid => {
+          // Find subquestions for this answer
+          const ansObj = (q.Answers || q.SubAnswers || []).find(a => String(a.PredefinedAnswerID) === String(aid));
+          if (ansObj && ansObj.SubQuestions) {
+            ansObj.SubQuestions.forEach(childSQ => {
+              const child = childSQ["*"] ? childSQ["*"] : childSQ;
+              deleteStateForQuestionRecursively(child);
+            });
+          }
+        });
+      }
+
+      // Also recurse always visible children
+      if (q.Children) {
+        q.Children.forEach(c => {
+          const child = c["*"] ? c["*"] : c;
+          deleteStateForQuestionRecursively(child);
+        });
+      }
+
+      // Finally delete
+      delete STATE[qid];
+    }
+
+    function updateDebug() {
+      document.getElementById("debugState").textContent = JSON.stringify(STATE, null, 2);
+    }
+
+    // --- INIT ---
+    document.getElementById("fileInput").addEventListener("change", async (e) => {
+      const f = e.target.files[0];
+      if (f) {
+        try {
+          const j = await readFileAsJson(f);
+          await loadJson(j);
+        } catch (e) { alert(e); }
+      }
+    });
+
+    document.getElementById("resetBtn").addEventListener("click", () => {
+      STATE = {};
+      renderRoots();
+      updateDebug();
+    });
+
+    document.getElementById("exportBtn").addEventListener("click", () => {
+      const blob = new Blob([JSON.stringify({ answers: STATE }, null, 2)], { type: 'application/json' });
+      const a = document.createElement('a');
+      a.href = URL.createObjectURL(blob);
+      a.download = "answers_export.json";
+      a.click();
+    });
+
+  </script>
+</body>
+
+</html>

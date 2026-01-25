@@ -1,0 +1,336 @@
+{
+    "meta": {
+        "schemaVersion": "v3_MODEL_18_01_2026",
+        "dbModel": "WIWA_DB_NEW_MODEL_18_01_2026.sql",
+        "generatedAt": "2026-01-25T03:05:22.1976600Z",
+        "questionnaireTypeId": 2
+    },
+    "questionnaire": {
+        "id": 2,
+        "typeId": 2,
+        "typeName": "SkraÄ‡eni upitnik",
+        "typeCode": "SHORT_QUEST"
+    },
+    "dictionaries": {
+        "questionFormats": [{
+                "QuestionFormatID": 1,
+                "Name": "Text input",
+                "UiControl": "textarea"
+            }, {
+                "QuestionFormatID": 2,
+                "Name": "Radio button input",
+                "UiControl": "radio"
+            }, {
+                "QuestionFormatID": 3,
+                "Name": "Dropdown select",
+                "UiControl": "select"
+            }, {
+                "QuestionFormatID": 4,
+                "Name": "Checkbox input",
+                "UiControl": "checkbox"
+            }
+        ],
+        "specificQuestionTypes": [{
+                "SpecificQuestionTypeID": 1,
+                "Name": "AlwaysVisible"
+            }, {
+                "SpecificQuestionTypeID": 2,
+                "Name": "ConditionallyVisible"
+            }, {
+                "SpecificQuestionTypeID": 3,
+                "Name": "Computed"
+            }
+        ]
+    },
+    "questionnaireTypeRules": [],
+    "rules": [{
+            "questionId": 102,
+            "kind": "BMI_CALC",
+            "matrixName": "BMI_Formula_Logic",
+            "resultCodeColumn": "Value",
+            "ruleName": "BMI Calculation",
+            "ruleId": 100,
+            "inputQuestionIds": [100, 101]
+        }
+    ],
+    "referenceMappings": [],
+    "referenceTables": {},
+    "questions": [{
+            "*": {
+                "QuestionID": 102,
+                "QuestionLabel": "BMI.R",
+                "QuestionText": "BMI Index",
+                "QuestionOrder": 3,
+                "QuestionFormatID": 1,
+                "QuestionFormatName": "Text input",
+                "UiControl": "textarea",
+                "SpecificQuestionTypeID": 3,
+                "SpecificQuestionTypeName": "Computed",
+                "ReadOnly": true,
+                "Children": [{
+                        "QuestionID": 100,
+                        "QuestionLabel": "BMI.H",
+                        "QuestionText": "Visina (cm)",
+                        "QuestionFormatID": 1,
+                        "SubQuestionFormat": "Text input",
+                        "ParentQuestionID": 102,
+                        "Children": [],
+                        "SubAnswers": []
+                    }, {
+                        "QuestionID": 101,
+                        "QuestionLabel": "BMI.W",
+                        "QuestionText": "TeÅ¾ina (kg)",
+                        "QuestionFormatID": 1,
+                        "SubQuestionFormat": "Text input",
+                        "ParentQuestionID": 102,
+                        "Children": [],
+                        "SubAnswers": []
+                    }
+                ],
+                "Answers": []
+            }
+        }, {
+            "*": {
+                "QuestionID": 103,
+                "QuestionLabel": "Q0.5",
+                "QuestionText": "Naziv zdravstvene ustanove kod koje klijent ima otvoren zdravstveni karton",
+                "QuestionOrder": 4,
+                "QuestionFormatID": 1,
+                "QuestionFormatName": "Text input",
+                "UiControl": "textarea",
+                "Children": [],
+                "Answers": []
+            }
+        }, {
+            "*": {
+                "QuestionID": 104,
+                "QuestionLabel": "Q1",
+                "QuestionText": "Da li ste ikada bolovali ili sada bolujete... (Lista bolesti)",
+                "QuestionOrder": 5,
+                "QuestionFormatID": 2,
+                "QuestionFormatName": "Radio button input",
+                "UiControl": "radio",
+                "Children": [{
+                        "QuestionID": 1041,
+                        "QuestionLabel": "Q1.1",
+                        "QuestionText": "Navedite koje oboljenje:",
+                        "QuestionFormatID": 1,
+                        "SubQuestionFormat": "Text input",
+                        "ParentQuestionID": 104,
+                        "Children": [],
+                        "SubAnswers": []
+                    }
+                ],
+                "Answers": [{
+                        "PredefinedAnswerID": 1001,
+                        "Answer": "Da",
+                        "Code": "YES",
+                        "PreSelected": false,
+                        "SubQuestions": [{
+                                "QuestionID": 1041,
+                                "QuestionLabel": "Q1.1",
+                                "QuestionText": "Navedite koje oboljenje:",
+                                "QuestionFormatID": 1,
+                                "SubQuestionFormat": "Text input",
+                                "ParentQuestionID": 104,
+                                "Children": [],
+                                "SubAnswers": []
+                            }
+                        ]
+                    }, {
+                        "PredefinedAnswerID": 1002,
+                        "Answer": "Ne",
+                        "Code": "NO",
+                        "PreSelected": true,
+                        "SubQuestions": []
+                    }
+                ]
+            }
+        }, {
+            "*": {
+                "QuestionID": 105,
+                "QuestionLabel": "Q2",
+                "QuestionText": "Da li se trenutno nalazite na ispitivanju...",
+                "QuestionOrder": 6,
+                "QuestionFormatID": 2,
+                "QuestionFormatName": "Radio button input",
+                "UiControl": "radio",
+                "Children": [],
+                "Answers": [{
+                        "PredefinedAnswerID": 1003,
+                        "Answer": "Da",
+                        "Code": "YES",
+                        "PreSelected": false,
+                        "SubQuestions": []
+                    }, {
+                        "PredefinedAnswerID": 1004,
+                        "Answer": "Ne",
+                        "Code": "NO",
+                        "PreSelected": true,
+                        "SubQuestions": []
+                    }
+                ]
+            }
+        }, {
+            "*": {
+                "QuestionID": 106,
+                "QuestionLabel": "Q3",
+                "QuestionText": "Da li Vam je utvrÄ‘ena trajna nesposobnost\/invaliditet?",
+                "QuestionOrder": 7,
+                "QuestionFormatID": 2,
+                "QuestionFormatName": "Radio button input",
+                "UiControl": "radio",
+                "Children": [],
+                "Answers": [{
+                        "PredefinedAnswerID": 1005,
+                        "Answer": "Da",
+                        "Code": "YES",
+                        "PreSelected": false,
+                        "SubQuestions": []
+                    }, {
+                        "PredefinedAnswerID": 1006,
+                        "Answer": "Ne",
+                        "Code": "NO",
+                        "PreSelected": true,
+                        "SubQuestions": []
+                    }
+                ]
+            }
+        }, {
+            "*": {
+                "QuestionID": 107,
+                "QuestionLabel": "Q4",
+                "QuestionText": "Da li se bavite nekim sportom?",
+                "QuestionOrder": 8,
+                "QuestionFormatID": 2,
+                "QuestionFormatName": "Radio button input",
+                "UiControl": "radio",
+                "Children": [{
+                        "QuestionID": 1071,
+                        "QuestionLabel": "Q4.1",
+                        "QuestionText": "Izaberite sport",
+                        "QuestionFormatID": 3,
+                        "SubQuestionFormat": "Dropdown select",
+                        "ParentQuestionID": 107,
+                        "Children": [],
+                        "SubAnswers": []
+                    }
+                ],
+                "Answers": [{
+                        "PredefinedAnswerID": 1007,
+                        "Answer": "Da",
+                        "Code": "YES",
+                        "PreSelected": false,
+                        "SubQuestions": [{
+                                "QuestionID": 1071,
+                                "QuestionLabel": "Q4.1",
+                                "QuestionText": "Izaberite sport",
+                                "QuestionFormatID": 3,
+                                "SubQuestionFormat": "Dropdown select",
+                                "ParentQuestionID": 107,
+                                "Children": [],
+                                "SubAnswers": []
+                            }
+                        ]
+                    }, {
+                        "PredefinedAnswerID": 1008,
+                        "Answer": "Ne",
+                        "Code": "NO",
+                        "PreSelected": true,
+                        "SubQuestions": []
+                    }
+                ]
+            }
+        }, {
+            "*": {
+                "QuestionID": 108,
+                "QuestionLabel": "Q5",
+                "QuestionText": "Da li ste izloÅ¾eni poveÄ‡anom riziku od povreÄ‘ivanja?",
+                "QuestionOrder": 9,
+                "QuestionFormatID": 2,
+                "QuestionFormatName": "Radio button input",
+                "UiControl": "radio",
+                "Children": [{
+                        "QuestionID": 1081,
+                        "QuestionLabel": "Q5.1",
+                        "QuestionText": "Navesti opasnosti:",
+                        "QuestionFormatID": 1,
+                        "SubQuestionFormat": "Text input",
+                        "ParentQuestionID": 108,
+                        "Children": [],
+                        "SubAnswers": []
+                    }
+                ],
+                "Answers": [{
+                        "PredefinedAnswerID": 1009,
+                        "Answer": "Da",
+                        "Code": "YES",
+                        "PreSelected": false,
+                        "SubQuestions": [{
+                                "QuestionID": 1081,
+                                "QuestionLabel": "Q5.1",
+                                "QuestionText": "Navesti opasnosti:",
+                                "QuestionFormatID": 1,
+                                "SubQuestionFormat": "Text input",
+                                "ParentQuestionID": 108,
+                                "Children": [],
+                                "SubAnswers": []
+                            }
+                        ]
+                    }, {
+                        "PredefinedAnswerID": 1010,
+                        "Answer": "Ne",
+                        "Code": "NO",
+                        "PreSelected": true,
+                        "SubQuestions": []
+                    }
+                ]
+            }
+        }, {
+            "*": {
+                "QuestionID": 109,
+                "QuestionLabel": "Q6",
+                "QuestionText": "Da li vam je ranije odbijena ponuda?",
+                "QuestionOrder": 10,
+                "QuestionFormatID": 2,
+                "QuestionFormatName": "Radio button input",
+                "UiControl": "radio",
+                "Children": [{
+                        "QuestionID": 1091,
+                        "QuestionLabel": "Q6.1",
+                        "QuestionText": "Navesti razloge:",
+                        "QuestionFormatID": 1,
+                        "SubQuestionFormat": "Text input",
+                        "ParentQuestionID": 109,
+                        "Children": [],
+                        "SubAnswers": []
+                    }
+                ],
+                "Answers": [{
+                        "PredefinedAnswerID": 1011,
+                        "Answer": "Da",
+                        "Code": "YES",
+                        "PreSelected": false,
+                        "SubQuestions": [{
+                                "QuestionID": 1091,
+                                "QuestionLabel": "Q6.1",
+                                "QuestionText": "Navesti razloge:",
+                                "QuestionFormatID": 1,
+                                "SubQuestionFormat": "Text input",
+                                "ParentQuestionID": 109,
+                                "Children": [],
+                                "SubAnswers": []
+                            }
+                        ]
+                    }, {
+                        "PredefinedAnswerID": 1012,
+                        "Answer": "Ne",
+                        "Code": "NO",
+                        "PreSelected": true,
+                        "SubQuestions": []
+                    }
+                ]
+            }
+        }
+    ]
+}

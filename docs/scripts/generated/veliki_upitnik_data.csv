@@ -1,0 +1,15 @@
+QuestionID,QuestionLabel,QuestionText,QuestionOrder,Format,SpecificType,RelationshipType,ParentQuestionID,TriggerAnswerID,PredefinedAnswerID,PredefinedAnswer,AnswerCode,ReadOnly
+----------,-------------,------------,-------------,------,------------,----------------,----------------,---------------,------------------,----------------,----------,--------
+201,Q1,Da li bolujete od sledeÄ‡ih bolesti (oznaÄ?ite sve)?,1,Checkbox input,AlwaysVisible,Main,NULL,NULL,1013,PoviA!en krvni pritisak,BP_HIGH,NULL
+201,Q1,Da li bolujete od sledeÄ‡ih bolesti (oznaÄ?ite sve)?,1,Checkbox input,AlwaysVisible,Main,NULL,NULL,1014,Bolesti srca,HEART,NULL
+2011,BP_DETAILS,Detalji o leÄ?enju (Pritisak),1,Text input,ConditionallyVisible,Conditional,NULL,1013,NULL,NULL,NULL,NULL
+2041,BMI.H,Visina (cm),1,Text input,AlwaysVisible,Child,204,NULL,NULL,NULL,NULL,NULL
+2061,ALCOHOL,Alkohol,1,Radio button input,AlwaysVisible,Child,206,NULL,1015,Bez konzumacije / Malo,ALCOHOL_LEVEL_0,NULL
+2061,ALCOHOL,Alkohol,1,Radio button input,AlwaysVisible,Child,206,NULL,1016,Umereno,ALCOHOL_LEVEL_1,NULL
+2042,BMI.W,TeA3ina (kg),2,Text input,AlwaysVisible,Child,204,NULL,NULL,NULL,NULL,NULL
+2062,TOBACCO,Duvan,2,Radio button input,AlwaysVisible,Child,206,NULL,NULL,NULL,NULL,NULL
+204,BMI.R,Podaci o visini i teA3ini (BMI),4,Text input,Computed,Main,NULL,NULL,NULL,NULL,NULL,1
+205,SPORT,Sport koji praktikujete,5,Autocomplete Dropdown,AlwaysVisible,Main,NULL,NULL,NULL,NULL,NULL,NULL
+206,HABITS,A1ivotne navike,6,Text input,AlwaysVisible,Main,NULL,NULL,NULL,NULL,NULL,NULL
+
+(11 rows affected)

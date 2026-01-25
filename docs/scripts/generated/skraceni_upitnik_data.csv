@@ -1,0 +1,26 @@
+QuestionID,QuestionLabel,QuestionText,QuestionOrder,Format,SpecificType,RelationshipType,ParentQuestionID,TriggerAnswerID,PredefinedAnswerID,PredefinedAnswer,AnswerCode,ReadOnly
+----------,-------------,------------,-------------,------,------------,----------------,----------------,---------------,------------------,----------------,----------,--------
+100,BMI.H,Visina (cm),1,Text input,NULL,Child,102,NULL,NULL,NULL,NULL,NULL
+100,BMI.H,Visina (cm),1,Text input,NULL,Main,102,NULL,NULL,NULL,NULL,NULL
+101,BMI.W,Težina (kg),2,Text input,NULL,Child,102,NULL,NULL,NULL,NULL,NULL
+101,BMI.W,Težina (kg),2,Text input,NULL,Main,102,NULL,NULL,NULL,NULL,NULL
+102,BMI.R,BMI Index,3,Text input,Computed,Main,NULL,NULL,NULL,NULL,NULL,1
+103,Q0.5,Naziv zdravstvene ustanove kod koje klijent ima otvoren zdravstveni karton,4,Text input,NULL,Main,NULL,NULL,NULL,NULL,NULL,NULL
+104,Q1,Da li ste ikada bolovali ili sada bolujete... (Lista bolesti),5,Radio button input,NULL,Main,NULL,NULL,1001,Da,YES,NULL
+104,Q1,Da li ste ikada bolovali ili sada bolujete... (Lista bolesti),5,Radio button input,NULL,Main,NULL,NULL,1002,Ne,NO,NULL
+1041,Q1.1,Navedite koje oboljenje:,5,Text input,NULL,Conditional,NULL,1001,NULL,NULL,NULL,NULL
+105,Q2,Da li se trenutno nalazite na ispitivanju...,6,Radio button input,NULL,Main,NULL,NULL,1003,Da,YES,NULL
+105,Q2,Da li se trenutno nalazite na ispitivanju...,6,Radio button input,NULL,Main,NULL,NULL,1004,Ne,NO,NULL
+106,Q3,Da li Vam je utvrđena trajna nesposobnost/invaliditet?,7,Radio button input,NULL,Main,NULL,NULL,1005,Da,YES,NULL
+106,Q3,Da li Vam je utvrđena trajna nesposobnost/invaliditet?,7,Radio button input,NULL,Main,NULL,NULL,1006,Ne,NO,NULL
+107,Q4,Da li se bavite nekim sportom?,8,Radio button input,NULL,Main,NULL,NULL,1007,Da,YES,NULL
+107,Q4,Da li se bavite nekim sportom?,8,Radio button input,NULL,Main,NULL,NULL,1008,Ne,NO,NULL
+1071,Q4.1,Izaberite sport,8,Dropdown select,NULL,Conditional,NULL,1007,NULL,NULL,NULL,NULL
+108,Q5,Da li ste izloženi povećanom riziku od povređivanja?,9,Radio button input,NULL,Main,NULL,NULL,1009,Da,YES,NULL
+108,Q5,Da li ste izloženi povećanom riziku od povređivanja?,9,Radio button input,NULL,Main,NULL,NULL,1010,Ne,NO,NULL
+1081,Q5.1,Navesti opasnosti:,9,Text input,NULL,Conditional,NULL,1009,NULL,NULL,NULL,NULL
+109,Q6,Da li vam je ranije odbijena ponuda?,10,Radio button input,NULL,Main,NULL,NULL,1011,Da,YES,NULL
+109,Q6,Da li vam je ranije odbijena ponuda?,10,Radio button input,NULL,Main,NULL,NULL,1012,Ne,NO,NULL
+1091,Q6.1,Navesti razloge:,10,Text input,NULL,Conditional,NULL,1011,NULL,NULL,NULL,NULL
+
+(22 rows affected)
