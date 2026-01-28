@@ -1,0 +1,28 @@
+1|NULL|1|Da li se na lokaciji skladište zalihe robe
+2|NULL|1|Da li se skladište zapaljive materije (boje i lakovi, ulja, alkoholi, razredivaci, nafta i goriva, pirotehnika, zemni gas, industrijski plin, materije podložne samozapaljenju i sl.)
+3|NULL|1|Da li se skladište voce, povrce, gvožde, kamena roba, cementni proizvodi, šljunak i sl.
+9|NULL|1|Gradevinska kategorija
+4|9|1|Gradevinska kategorija - Spoljašnji zidovi
+5|9|1|Gradevinska kategorija - Krovni pokrivac
+6|9|1|Gradevinska kategorija - Konstrukcija objekta
+7|NULL|1|Izaberite spratnost objekta
+8|NULL|1|Klasa zaštitnih mera - udaljenost vatrogasne jedinice
+100|102|2|Visina (cm)
+101|102|2|Težina (kg)
+102|NULL|2|BMI Index
+104|NULL|2|Da li ste ikada bolovali ili sada bolujete... (Lista bolesti)
+105|NULL|2|Da li se trenutno nalazite na ispitivanju...
+106|NULL|2|Da li Vam je utvrdena trajna nesposobnost/invaliditet?
+107|NULL|2|Da li se bavite nekim sportom?
+108|NULL|2|Da li ste izloženi povecanom riziku od povredivanja?
+109|NULL|2|Da li vam je ranije odbijena ponuda?
+10000|NULL|2|Da li imate otvoren zdravstveni karton?
+1000|NULL|3|Da li ste bolovali ili trenutno bolujete od:
+3000|NULL|3|Da li bolujete od bolesti koja nije navedena ili imate telesni nedostatak?
+4000|NULL|3|Da li se trenutno nalazite na ispitivanju ili cekate rezultate?
+5000|NULL|3|Da li ste izloženi povecanom riziku od povredivanja?
+6000|NULL|3|Da li se bavite sportom?
+7000|NULL|3|Da li redovno konzumirate:
+8000|NULL|3|Uzimate li redovno lekove?
+9000|NULL|3|BMI Index
+10000|NULL|3|Da li imate otvoren zdravstveni karton?

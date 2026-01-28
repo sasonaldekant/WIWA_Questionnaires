@@ -1,0 +1,28 @@
+1 Upitnik lokacije - podaci za PremiumRateMatrix 1 Da li se na lokaciji skladište zalihe robe NULL 1
+1 Upitnik lokacije - podaci za PremiumRateMatrix 2 Da li se skladište zapaljive materije (boje i lakovi, ulja, alkoholi, razredivaci, nafta i goriva, pirotehnika, zemni gas, industrijski plin, materije podložne samozapaljenju i sl.) NULL 2
+1 Upitnik lokacije - podaci za PremiumRateMatrix 3 Da li se skladište voce, povrce, gvožde, kamena roba, cementni proizvodi, šljunak i sl. NULL 3
+1 Upitnik lokacije - podaci za PremiumRateMatrix 9 Gradevinska kategorija NULL 4
+1 Upitnik lokacije - podaci za PremiumRateMatrix 4 Gradevinska kategorija - Spoljašnji zidovi 9 5
+1 Upitnik lokacije - podaci za PremiumRateMatrix 5 Gradevinska kategorija - Krovni pokrivac 9 6
+1 Upitnik lokacije - podaci za PremiumRateMatrix 6 Gradevinska kategorija - Konstrukcija objekta 9 7
+1 Upitnik lokacije - podaci za PremiumRateMatrix 7 Izaberite spratnost objekta NULL 8
+1 Upitnik lokacije - podaci za PremiumRateMatrix 8 Klasa zaštitnih mera - udaljenost vatrogasne jedinice NULL 9
+2 SkraÄ‡eni upitnik 100 Visina (cm) 102 1
+2 SkraÄ‡eni upitnik 101 Težina (kg) 102 2
+2 SkraÄ‡eni upitnik 102 BMI Index NULL 3
+2 SkraÄ‡eni upitnik 104 Da li ste ikada bolovali ili sada bolujete... (Lista bolesti) NULL 5
+2 SkraÄ‡eni upitnik 105 Da li se trenutno nalazite na ispitivanju... NULL 6
+2 SkraÄ‡eni upitnik 106 Da li Vam je utvrdena trajna nesposobnost/invaliditet? NULL 7
+2 SkraÄ‡eni upitnik 107 Da li se bavite nekim sportom? NULL 8
+2 SkraÄ‡eni upitnik 108 Da li ste izloženi povecanom riziku od povredivanja? NULL 9
+2 SkraÄ‡eni upitnik 109 Da li vam je ranije odbijena ponuda? NULL 10
+2 SkraÄ‡eni upitnik 10000 Da li imate otvoren zdravstveni karton? NULL 90
+3 Veliki upitnik 1000 Da li ste bolovali ili trenutno bolujete od: NULL 10
+3 Veliki upitnik 3000 Da li bolujete od bolesti koja nije navedena ili imate telesni nedostatak? NULL 20
+3 Veliki upitnik 4000 Da li se trenutno nalazite na ispitivanju ili cekate rezultate? NULL 30
+3 Veliki upitnik 5000 Da li ste izloženi povecanom riziku od povredivanja? NULL 40
+3 Veliki upitnik 6000 Da li se bavite sportom? NULL 50
+3 Veliki upitnik 7000 Da li redovno konzumirate: NULL 60
+3 Veliki upitnik 8000 Uzimate li redovno lekove? NULL 70
+3 Veliki upitnik 9000 BMI Index NULL 80
+3 Veliki upitnik 10000 Da li imate otvoren zdravstveni karton? NULL 90

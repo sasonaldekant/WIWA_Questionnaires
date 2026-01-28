@@ -1,0 +1,3 @@
+[{"QuestionComputedConfigID":1,"QuestionID":9,"RuleName":"Building category (computed)","ComputeMethodID":1,"MatrixObjectName":"BuildingCategoryMatrix","MatrixOutputColumnName":"ConstructionTypeID","Priority":100},{"QuestionComputedConfigID":100,"QuestionID":9000,"RuleName":"BMI Calculation","FormulaExpression":"{9200} \/ Math.pow({9100}\/100, 2)","ComputeMethodID":2,"MatrixObjectName":"BMI_Formula","MatrixOutputColumnName":"Value","Priority":1},{"QuestionComputedConfigID":115,"QuestionID":102,"RuleName":"BMI Calculation","FormulaExpression":"{101} \/ Math.pow({100}\/100, 2)","ComputeMethodID":2,"MatrixObjectName":"BMI_Formula","MatrixOutputColumnName":"Value","Priority":1}]
+
+(1 rows affected)

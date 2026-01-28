@@ -1,0 +1,19 @@
+1|NULL|Da li se na lokaciji skladište zalihe robe
+2|NULL|Da li se skladište zapaljive materije (boje i lako
+3|NULL|Da li se skladište voce, povrce, gvožde, kamena ro
+4|9|Gradevinska kategorija - Spoljašnji zidovi
+5|9|Gradevinska kategorija - Krovni pokrivac
+6|9|Gradevinska kategorija - Konstrukcija objekta
+7|NULL|Izaberite spratnost objekta
+8|NULL|Klasa zaštitnih mera - udaljenost vatrogasne jedin
+9|NULL|Gradevinska kategorija
+100|102|Visina (cm)
+101|102|Težina (kg)
+102|NULL|BMI Index
+103|NULL|Naziv zdravstvene ustanove kod koje klijent ima ot
+104|NULL|Da li ste ikada bolovali ili sada bolujete... (Lis
+105|NULL|Da li se trenutno nalazite na ispitivanju...
+106|NULL|Da li Vam je utvrdena trajna nesposobnost/invalidi
+107|NULL|Da li se bavite nekim sportom?
+108|NULL|Da li ste izloženi povecanom riziku od povredivanj
+109|NULL|Da li vam je ranije odbijena ponuda?

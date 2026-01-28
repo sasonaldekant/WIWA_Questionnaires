@@ -100,6 +100,8 @@ public class QuestionComputedConfig
     public string? MatrixOutputColumnName { get; set; }
     public short Priority { get; set; }
     public bool IsActive { get; set; }
+    public string? FormulaExpression { get; set; } // Added for generic calculation
+
 
     // Navigation
     public Question Question { get; set; } = null!;

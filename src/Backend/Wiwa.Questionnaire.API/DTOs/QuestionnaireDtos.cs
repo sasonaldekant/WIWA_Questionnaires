@@ -23,6 +23,7 @@ public class RuleDto
     // It might be inferred by parent/child or hardcoded logic.
     // However, I will add this property for now as list.
     public List<int> InputQuestionIds { get; set; } = new();
+    public string? Formula { get; set; }
 }
 
 
@@ -65,4 +66,10 @@ public class AnswerDto
     
     // For SubQuestions (Branching)
     public List<QuestionDto> SubQuestions { get; set; } = new();
+}
+
+public class EvaluateRuleRequest
+{
+    public int RuleId { get; set; }
+    public Dictionary<int, string> Inputs { get; set; } = new();
 }

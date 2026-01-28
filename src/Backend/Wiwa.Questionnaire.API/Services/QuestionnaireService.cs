@@ -96,13 +96,13 @@ public class QuestionnaireService : IQuestionnaireService
         {
             RuleId = r.QuestionComputedConfigID,
             QuestionId = r.QuestionID,
-            Kind = r.ComputeMethodID == 2 ? "BMI_CALC" : (r.ComputeMethodID == 1 ? "MATRIX_LOOKUP" : "UNKNOWN"),
+            Kind = !string.IsNullOrEmpty(r.FormulaExpression) ? "FORMULA" :
+                   (r.ComputeMethodID == 2 ? "BMI_CALC" : (r.ComputeMethodID == 1 ? "MATRIX_LOOKUP" : "UNKNOWN")),
             RuleName = r.RuleName,
             MatrixName = r.MatrixObjectName ?? string.Empty,
             ResultCodeColumn = r.MatrixOutputColumnName ?? "Value",
-            InputQuestionIds = r.ComputeMethodID == 2 && inputsMap.ContainsKey(r.QuestionID)
-                ? inputsMap[r.QuestionID]
-                : new List<int>()
+            Formula = r.FormulaExpression,
+            InputQuestionIds = ExtractInputsFromFormula(r.FormulaExpression, inputsMap, r.QuestionID),
         }).ToList();
 
         return new QuestionnaireSchemaDto
@@ -217,6 +217,124 @@ public class QuestionnaireService : IQuestionnaireService
         }
 
         return dto;
+    }
+
+    public async Task<string?> EvaluateRuleAsync(int ruleId, Dictionary<int, string> inputs)
+    {
+        var config = await _context.QuestionComputedConfigs.FindAsync(ruleId);
+        if (config == null || !inputs.Any()) return null;
+
+        // MATRIX_LOOKUP
+        if (config.ComputeMethodID == 1)
+        {
+            var tableName = config.MatrixObjectName;
+            var outputCol = config.MatrixOutputColumnName;
+            
+            if (string.IsNullOrEmpty(tableName) || string.IsNullOrEmpty(outputCol)) return null;
+
+            // 1. Get Matrix Columns (Ordered)
+            var columns = new List<string>();
+            var connection = _context.Database.GetDbConnection();
+            await connection.OpenAsync();
+
+            using (var cmd = connection.CreateCommand())
+            {
+                cmd.CommandText = @"
+                    SELECT COLUMN_NAME 
+                    FROM INFORMATION_SCHEMA.COLUMNS 
+                    WHERE TABLE_NAME = @tableName 
+                    ORDER BY ORDINAL_POSITION";
+                
+                var p = cmd.CreateParameter();
+                p.ParameterName = "@tableName";
+                p.Value = tableName;
+                cmd.Parameters.Add(p);
+
+                using (var reader = await cmd.ExecuteReaderAsync())
+                {
+                    while (await reader.ReadAsync())
+                    {
+                        var colName = reader.GetString(0);
+                        // Exclude PK (Assuming TableID pattern) and Output Column
+                        if (!colName.Equals(outputCol, StringComparison.OrdinalIgnoreCase) && 
+                            !colName.Equals(tableName + "ID", StringComparison.OrdinalIgnoreCase))
+                        {
+                            columns.Add(colName);
+                        }
+                    }
+                }
+            }
+
+            // 2. Get Input Questions (Ordered by QuestionOrder)
+            var inputQIds = inputs.Keys.ToList();
+            var questions = await _context.Questions
+                .Where(q => inputQIds.Contains(q.QuestionID))
+                .OrderBy(q => q.QuestionOrder)
+                .ToListAsync();
+
+            if (columns.Count != questions.Count)
+            {
+                // Fallback: If mismatch, try matching by size or log warning. 
+                // For now, assume strict mapping.
+                Console.WriteLine($"[EvaluateRule] Column/Input mismatch. Cols: {columns.Count}, Inputs: {questions.Count}");
+            }
+
+            // 3. Build Dynamic Query
+            var sql = $"SELECT TOP 1 [{outputCol}] FROM [{tableName}] WHERE 1=1";
+            var parameters = new List<object>(); // For Dapper or EF raw, but here using ADO explicitly for safety
+            
+            using (var cmd = connection.CreateCommand())
+            {
+                for (int i = 0; i < Math.Min(columns.Count, questions.Count); i++)
+                {
+                    var colName = columns[i];
+                    var qId = questions[i].QuestionID;
+                    var val = inputs[qId];
+
+                    sql += $" AND [{colName}] = @p{i}";
+                    
+                    var p = cmd.CreateParameter();
+                    p.ParameterName = $"@p{i}";
+                    // Attempt to handle both numeric and string IDs
+                    if (int.TryParse(val, out int intVal))
+                        p.Value = intVal;
+                    else
+                        p.Value = val;
+                    
+                    cmd.Parameters.Add(p);
+                }
+
+                cmd.CommandText = sql;
+                var result = await cmd.ExecuteScalarAsync();
+                await connection.CloseAsync();
+
+                return result?.ToString();
+            }
+        }
+        
+        // BMI is handled on Frontend usually, but we could support it here too if needed.
+        return null;
+    }
+
+    private List<int> ExtractInputsFromFormula(string? formula, Dictionary<int, List<int>> inputsMap, int parentQId)
+    {
+        // 1. If Explicit Formula with {ID} placeholders exists
+        if (!string.IsNullOrEmpty(formula))
+        {
+            var matches = System.Text.RegularExpressions.Regex.Matches(formula, @"\{(\d+)\}");
+            if (matches.Count > 0)
+            {
+                return matches.Select(m => int.Parse(m.Groups[1].Value)).Distinct().ToList();
+            }
+        }
+
+        // 2. Fallback to classic Parent->Child mapping (for Matrix or old BMI)
+        if (inputsMap.ContainsKey(parentQId))
+        {
+            return inputsMap[parentQId];
+        }
+
+        return new List<int>();
     }
 
     private string MapFormat(string? code)

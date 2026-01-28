@@ -10,6 +10,7 @@ export interface RuleDto {
     kind: string; // BMI_CALC, MATRIX_LOOKUP
     ruleName: string;
     inputQuestionIds: number[];
+    formula?: string;
 }
 
 export interface QuestionTypeDto {

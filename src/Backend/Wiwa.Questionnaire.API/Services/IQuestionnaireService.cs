@@ -6,4 +6,5 @@ public interface IQuestionnaireService
 {
     Task<QuestionnaireSchemaDto?> GetQuestionnaireSchemaAsync(string typeCode);
     Task<List<QuestionTypeDto>> GetQuestionnaireTypesAsync();
+    Task<string?> EvaluateRuleAsync(int ruleId, Dictionary<int, string> inputs);
 }

@@ -1,0 +1,107 @@
+1|NULL|Da li se na lokaciji skladište zalihe robe
+2|NULL|Da li se skladište zapaljive materije (boje i lako
+3|NULL|Da li se skladište voce, povrce, gvožde, kamena ro
+4|9|Gradevinska kategorija - Spoljašnji zidovi
+5|9|Gradevinska kategorija - Krovni pokrivac
+6|9|Gradevinska kategorija - Konstrukcija objekta
+7|NULL|Izaberite spratnost objekta
+8|NULL|Klasa zaštitnih mera - udaljenost vatrogasne jedin
+9|NULL|Gradevinska kategorija
+100|102|Visina (cm)
+101|102|Težina (kg)
+102|NULL|BMI Index
+103|NULL|Naziv zdravstvene ustanove kod koje klijent ima ot
+104|NULL|Da li ste ikada bolovali ili sada bolujete... (Lis
+105|NULL|Da li se trenutno nalazite na ispitivanju...
+106|NULL|Da li Vam je utvrdena trajna nesposobnost/invalidi
+107|NULL|Da li se bavite nekim sportom?
+108|NULL|Da li ste izloženi povecanom riziku od povredivanj
+109|NULL|Da li vam je ranije odbijena ponuda?
+1000|NULL|Da li ste bolovali ili trenutno bolujete od:
+1041|104|Koje oboljenje:
+1051|105|Detalji (Lista bolesti):
+1061|106|Detalji (Invaliditet):
+1071|107|Detalji (Sport):
+1081|108|Detalji (Rizik povreÄ‘ivanja):
+1091|109|Detalji (Odbijena ponuda):
+1100|NULL|Detalji (Maligni tumori):
+1200|NULL|Koje bolesti srca i krvnih sudova (oznacite):
+1210|NULL|Detalji (Povišen pritisak):
+1220|NULL|Detalji (Aritmija):
+1230|NULL|Detalji (Tahikardija):
+1240|NULL|Detalji (Mane/Slabosti):
+1250|NULL|Detalji (Infarkt):
+1260|NULL|Detalji (Angina):
+1270|NULL|Detalji (Aneurizma):
+1280|NULL|Detalji (Ateroskleroza):
+1290|NULL|Detalji (Vene):
+1291|NULL|Detalji (Tromboza):
+1300|NULL|Koje bolesti metabolizma (oznacite):
+1310|NULL|Detalji (Dijabetes):
+1320|NULL|Detalji (Giht):
+1330|NULL|Detalji (Štitna žlezda):
+1340|NULL|Detalji (Nadbubrežna):
+1350|NULL|Detalji (Hipofiza):
+1400|NULL|Koje bolesti disajnog sistema (oznacite):
+1410|NULL|Detalji (Bronhitis):
+1420|NULL|Detalji (HOBP):
+1430|NULL|Detalji (Astma):
+1440|NULL|Detalji (Emfizem):
+1450|NULL|Detalji (Embolija):
+1460|NULL|Detalji (Tuberkuloza):
+1500|NULL|Koje bolesti uro-genitalnog sistema (oznacite):
+1510|NULL|Detalji (Bubrezi):
+1520|NULL|Detalji (Mokracni kanali):
+1530|NULL|Detalji (Prostata):
+1540|NULL|Detalji (Testisi):
+1550|NULL|Detalji (Materica):
+1560|NULL|Detalji (Jajnici):
+1570|NULL|Detalji (Dojka):
+1600|NULL|Koje bolesti krvi/imunog sistema (oznacite):
+1610|NULL|Detalji (Leukemija):
+1620|NULL|Detalji (Limfomi):
+1630|NULL|Detalji (HIV/SIDA):
+1640|NULL|Detalji (Lupus):
+1650|NULL|Detalji (Vezivno tkivo):
+1700|NULL|Koje bolesti digestivnog sistema (oznacite):
+1710|NULL|Detalji (Cir):
+1720|NULL|Detalji (Kron):
+1730|NULL|Detalji (Kolitis):
+1740|NULL|Detalji (Hepatitis):
+1750|NULL|Detalji (Ciroza):
+1760|NULL|Detalji (Žuc):
+1770|NULL|Detalji (Pankreas):
+1800|NULL|Detalji (Lokomotorni):
+1900|NULL|Koje bolesti nervnog sistema (oznacite):
+1910|NULL|Detalji (Pareze):
+1920|NULL|Detalji (Epilepsija):
+1930|NULL|Detalji (Šlog):
+1940|NULL|Detalji (MS):
+1950|NULL|Detalji (Distrofije):
+1960|NULL|Detalji (Parkinson):
+1970|NULL|Detalji (Alchajmer):
+1980|NULL|Detalji (Psihoze/Depresija):
+2000|NULL|Detalji (Vid/Sluh):
+2010|NULL|Visina dioptrije:
+2100|NULL|Detalji (Kožne promene):
+2200|NULL|Detalji (Povrede/Tegobe):
+3000|NULL|Da li bolujete od bolesti koja nije navedena ili i
+3100|NULL|Navedite koja je bolest:
+4000|NULL|Da li se trenutno nalazite na ispitivanju ili ceka
+4100|NULL|Navedite detalje:
+5000|NULL|Da li ste izloženi povecanom riziku od povredivanj
+5100|NULL|Navesti opasnost:
+6000|NULL|Da li se bavite sportom?
+6100|NULL|Organizovano:
+6200|NULL|Rekreativno:
+7000|NULL|Da li redovno konzumirate:
+7100|7000|Alkohol
+7200|7000|Drogu/Narkotike
+7300|7000|Cigarete/Duvan
+8000|NULL|Uzimate li redovno lekove?
+8100|NULL|Navedite koji lekovi i kolicinu:
+9000|NULL|BMI Index
+9100|9000|Visina (cm)
+9200|9000|Težina (kg)
+10000|NULL|Da li imate otvoren zdravstveni karton?
+10100|NULL|Naziv ustanove i od kada:

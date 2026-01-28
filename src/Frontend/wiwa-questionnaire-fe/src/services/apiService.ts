@@ -11,5 +11,13 @@ export const questionnaireApi = {
     getTypes: async (): Promise<QuestionTypeDto[]> => {
         const response = await axios.get<QuestionTypeDto[]>(`${API_BASE_URL}/Questionnaire/types`);
         return response.data;
+    },
+    evaluateRule: async (ruleId: number, inputs: Record<number, string>): Promise<{ value: string | null }> => {
+        // Convert input map to generic dictionary if needed, but JS object works usually for JSON
+        const response = await axios.post<{ value: string | null }>(`${API_BASE_URL}/Questionnaire/evaluate-rule`, {
+            ruleId,
+            inputs
+        });
+        return response.data;
     }
 };

@@ -29,4 +29,20 @@ public class QuestionnaireController : ControllerBase
         if (result == null) return NotFound($"Questionnaire type '{typeCode}' not found.");
         return Ok(result);
     }
+
+    [HttpPost("evaluate-rule")]
+    public async Task<ActionResult<string>> EvaluateRule([FromBody] EvaluateRuleRequest request)
+    {
+        try 
+        {
+            var result = await _service.EvaluateRuleAsync(request.RuleId, request.Inputs);
+            // Return Ok(null) if calculation not possible (e.g. missing inputs), or the value.
+            return Ok(new { Value = result });
+        }
+        catch (Exception ex)
+        {
+            // In dev, return message.
+            return BadRequest(ex.Message);
+        }
+    }
 }

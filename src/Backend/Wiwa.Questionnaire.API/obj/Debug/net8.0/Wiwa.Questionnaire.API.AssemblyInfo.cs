@@ -13,7 +13,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("Wiwa.Questionnaire.API")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+00a08048f1ba132a586c9422dbc3572c5cd5c215")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+3c01ed2e5a29dfba743d834467d326ef76cd75b9")]
 [assembly: System.Reflection.AssemblyProductAttribute("Wiwa.Questionnaire.API")]
 [assembly: System.Reflection.AssemblyTitleAttribute("Wiwa.Questionnaire.API")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]
