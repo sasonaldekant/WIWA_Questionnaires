@@ -24,7 +24,6 @@ body {
 
 .container {
   width: 100%;
-  max-width: 1280px;
   margin: 40px auto;
   background: white;
   padding: 30px;
@@ -32,7 +31,16 @@ body {
   border-radius: 8px;
   border-top: 5px solid var(--wiener-red);
   box-sizing: border-box;
-  /* Ensure padding doesn't affect width calculation */
+}
+
+.container.questionnaire-mode {
+  max-width: 1000px;
+  /* Wider for questionnaire */
+}
+
+.container.setup-mode {
+  max-width: 800px;
+  /* Narrower for setup */
 }
 
 .embedded-container {
@@ -63,9 +71,17 @@ header h1 {
   font-weight: 500;
 }
 
+/* Center the inputs block */
+.setup-fields-wrapper {
+  width: 60%;
+  margin: 0 auto;
+  text-align: left;
+}
+
 .setup-panel select,
 .setup-panel input {
   width: 100%;
+  /* Fill the centered wrapper */
   padding: 10px;
   border: 1px solid #ccc;
   border-radius: 4px;

@@ -317,7 +317,7 @@ export const QuestionnaireRenderer = React.forwardRef<QuestionnaireRendererHandl
         setErrors(newErrors);
 
         if (Object.keys(newErrors).length > 0) {
-            alert(validationMessages?.error || `Validation Failed! Found ${Object.keys(newErrors).length} errors. Please check the form.`);
+            // Alert removed; App.tsx will handle the notification
             return false;
         } else {
             return true;

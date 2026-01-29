@@ -35,7 +35,10 @@ function App({
   const [existingInstanceID, setExistingInstanceID] = useState<number | null>(null);
   const [isReadOnly, setIsReadOnly] = useState(false);
   const [showSuccessDialog, setShowSuccessDialog] = useState(false);
+  const [showErrorDialog, setShowErrorDialog] = useState(false);
   const [successMessage, setSuccessMessage] = useState('');
+
+  const [setupErrors, setSetupErrors] = useState({ type: false, idType: false, id: false });
 
   const rendererRef = useRef<QuestionnaireRendererHandle>(null);
 
@@ -59,10 +62,7 @@ function App({
       ]);
       setTypes(typesData);
       setIdTypes(idTypesData);
-
-      if (idTypesData.length > 0 && !idTypeID) {
-        setIdTypeID(idTypesData[0].questionnaireIdentificatorTypeID);
-      }
+      // Auto-selection removed to force user choice
     } catch (err) {
       setError('Failed to load metadata. Is Backend running?');
       console.error(err);
@@ -97,10 +97,18 @@ function App({
   };
 
   const handleConfigure = async () => {
-    if (!selectedType || !idTypeID || !identificator) {
-      alert(i18n.setup.error_missing_fields);
+    const newSetupErrors = {
+      type: !selectedType,
+      idType: !idTypeID,
+      id: !identificator
+    };
+
+    if (newSetupErrors.type || newSetupErrors.idType || newSetupErrors.id) {
+      setSetupErrors(newSetupErrors);
       return;
     }
+
+    setSetupErrors({ type: false, idType: false, id: false });
 
     try {
       setLoading(true);
@@ -129,7 +137,10 @@ function App({
 
     if (rendererRef.current) {
       const isValid = rendererRef.current.validate();
-      if (!isValid) return; // Validation failed
+      if (!isValid) {
+        setShowErrorDialog(true);
+        return; // Validation failed
+      }
     }
 
     const answersPayload: Record<number, { value?: string, selectedAnswerIds?: number[] }> = {};
@@ -183,7 +194,7 @@ function App({
   };
 
   return (
-    <div className={embedded ? "embedded-container" : "container"}>
+    <div className={(embedded ? "embedded-container" : "container") + (formConfigured ? " questionnaire-mode" : " setup-mode")}>
       <header>
         <h1>Wiener Städtische - Health Questionnaire</h1>
       </header>
@@ -199,27 +210,55 @@ function App({
         </div>
       )}
 
+      {/* Error Modal */}
+      {showErrorDialog && (
+        <div className="modal-overlay">
+          <div className="modal-content" style={{ borderTop: '5px solid #dc3545' }}>
+            <h3 style={{ color: '#dc3545' }}>Greška!</h3>
+            <p>Forma sadrži greške. Molimo vas da proverite unete podatke i pokušate ponovo.</p>
+            <button onClick={() => setShowErrorDialog(false)} className="btn-primary" style={{ backgroundColor: '#dc3545' }}>U redu</button>
+          </div>
+        </div>
+      )}
+
       {!formConfigured ? (
         <div className="setup-panel" style={{ padding: 20, border: '1px solid #ddd', borderRadius: 8 }}>
           <h3>{i18n.setup.title}</h3>
-          <div style={{ marginBottom: 15 }}>
-            <label>{i18n.setup.type_label}: </label>
-            <select value={selectedType} onChange={e => setSelectedType(e.target.value)}>
-              <option value="">-- Izaberi --</option>
-              {types.map(t => <option key={t.code} value={t.code}>{t.name}</option>)}
-            </select>
+          <div className="setup-fields-wrapper">
+            <div style={{ marginBottom: 15 }}>
+              <label>{i18n.setup.type_label}: </label>
+              <select
+                value={selectedType}
+                onChange={e => { setSelectedType(e.target.value); setSetupErrors(prev => ({ ...prev, type: false })); }}
+                style={setupErrors.type ? { borderColor: 'red', backgroundColor: '#fff5f5', color: '#333' } : {}}
+              >
+                <option value="">-- Izaberi --</option>
+                {types.map(t => <option key={t.code} value={t.code}>{t.name}</option>)}
+              </select>
+            </div>
+            <div style={{ marginBottom: 15 }}>
+              <label>{i18n.setup.id_type_label}: </label>
+              <select
+                value={idTypeID || ""}
+                onChange={e => { setIdTypeID(Number(e.target.value)); setSetupErrors(prev => ({ ...prev, idType: false })); }}
+                style={setupErrors.idType ? { borderColor: 'red', backgroundColor: '#fff5f5', color: '#333' } : {}}
+              >
+                <option value="">-- Izaberi --</option>
+                {idTypes.map(it => <option key={it.questionnaireIdentificatorTypeID} value={it.questionnaireIdentificatorTypeID}>{it.name}</option>)}
+              </select>
+            </div>
+            <div style={{ marginBottom: 15 }}>
+              <label>{i18n.setup.id_value_label}: </label>
+              <input
+                type="text"
+                value={identificator}
+                onChange={e => { setIdentificator(e.target.value); setSetupErrors(prev => ({ ...prev, id: false })); }}
+                placeholder="Npr. Lokacija ABC"
+                style={setupErrors.id ? { borderColor: 'red', backgroundColor: '#fff5f5', color: '#333' } : {}}
+              />
+            </div>
+            <button onClick={handleConfigure} disabled={loading}>{i18n.setup.button_show}</button>
           </div>
-          <div style={{ marginBottom: 15 }}>
-            <label>{i18n.setup.id_type_label}: </label>
-            <select value={idTypeID} onChange={e => setIdTypeID(Number(e.target.value))}>
-              {idTypes.map(it => <option key={it.questionnaireIdentificatorTypeID} value={it.questionnaireIdentificatorTypeID}>{it.name}</option>)}
-            </select>
-          </div>
-          <div style={{ marginBottom: 15 }}>
-            <label>{i18n.setup.id_value_label}: </label>
-            <input type="text" value={identificator} onChange={e => setIdentificator(e.target.value)} placeholder="Npr. Lokacija ABC" />
-          </div>
-          <button onClick={handleConfigure} disabled={loading}>{i18n.setup.button_show}</button>
         </div>
       ) : (
         <main>

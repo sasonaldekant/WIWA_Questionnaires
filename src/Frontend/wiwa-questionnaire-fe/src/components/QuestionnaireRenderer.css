@@ -1,6 +1,7 @@
 .wiwa-renderer {
   font-family: 'Inter', sans-serif;
-  max-width: 800px;
+  max-width: 100%;
+  /* Allow it to fill the container */
   margin: 0 auto;
 }
 
