@@ -21,6 +21,11 @@ Strukturirana sesija analize između BA i DBA agenata za novi zahtev klijenta.
 ### Opis
 [Šta klijent želi postići]
 
+### Computed vrednosti
+- [ ] Da li postoje izračunljiva polja?
+- [ ] Definisanje inputa i outputa
+- [ ] Potrebne matrice/tabele
+
 ### Tip procesa
 - [ ] Upitnik (Data Collection) -> **Vidi 09_ARCHITECTURE_SEPARATION**
 - [ ] UW proces (Business Logic) -> **Vidi 06_PRAVILA_I_PROVERE**
@@ -61,9 +66,14 @@ Strukturirana sesija analize između BA i DBA agenata za novi zahtev klijenta.
 | P1→A1→P3 | ? |
 
 ### Reference tabele
-| Tabela | Postoji? | Potrebna? |
-|--------|----------|-----------|
-| ? | ? | ? |
+| Tabela | Tip (Lista/Matrica) | Postoji? | Kolone mapirane? |
+|--------|---------------------|----------|------------------|
+| ? | ? | ? | ? |
+
+### Computed Logic
+- [ ] Parent Pitanje je ReadOnly=1 ?
+- [ ] Parent Pitanje je SpecificQuestionTypeID=3 ?
+- [ ] Code-ovi child pitanja se gađaju sa kolonama matrice?
 
 ### Zaključak
 Model pokriva: [X]%
@@ -87,6 +97,7 @@ Potrebna proširenja: [lista]
 
 ```markdown
 ## Finalna specifikacija
+**Lokacija**: `docs/specs/YYYY-MM-DD_[Naziv].md`
 
 ### SQL skripte potrebne
 1. [Lista DDL/DML]

@@ -51,17 +51,18 @@
   background-color: #f9fafb;
 }
 
-.sub-questions-container,
-.children-container {
+.nested-questions-container {
   margin-top: 15px;
-  padding-left: 30px;
+  padding-left: 20px;
   border-left: 2px solid #e0e0e0;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
   transition: all 0.3s ease;
 }
 
-.children-container {
-  border-left-style: dashed;
-  /* Visual distinction for always-visible children */
+.nested-question-wrapper {
+  width: 100%;
 }
 
 @keyframes slideDown {

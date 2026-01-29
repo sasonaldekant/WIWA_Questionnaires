@@ -80,80 +80,13 @@ export const QuestionnaireRenderer: React.FC<Props> = ({ schema, rules, onChange
         });
     }, [state, rules]);
 
-    const evaluateFormulaRule = (rule: RuleDto) => {
-        if (!rule.formula) return;
-
-        // Formula format: "{101} / Math.pow({100}/100, 2)"
-
-        // 1. Extract IDs from formula
-        const regex = /\{(\d+)\}/g;
-        let match;
-        const idSet = new Set<number>();
-
-        while ((match = regex.exec(rule.formula)) !== null) {
-            idSet.add(parseInt(match[1], 10));
-        }
-
-        // 2. Check validity and Replace
-        let expr = rule.formula;
-        let allValid = true;
-
-        for (const id of idSet) {
-            const valStr = state[id]?.value;
-            if (valStr) {
-                const val = parseFloat(valStr.replace(',', '.'));
-                if (!isNaN(val)) {
-                    expr = expr.replace(new RegExp(`\\{${id}\\}`, 'g'), val.toString());
-                } else {
-                    allValid = false;
-                    break;
-                }
-            } else {
-                allValid = false;
-                break;
-            }
-        }
-
-        // 3. Evaluate
-        if (allValid && idSet.size > 0) {
-            try {
-                // eslint-disable-next-line no-new-func
-                const result = new Function(`return ${expr}`)();
-
-                if (typeof result === 'number' && !isNaN(result)) {
-                    const processed = result.toFixed(2);
-
-                    if (state[rule.questionId]?.value !== processed) {
-                        console.log(`[Formula] ${rule.ruleName}: ${expr} => ${processed}`);
-                        setState(prev => ({
-                            ...prev,
-                            [rule.questionId]: { ...prev[rule.questionId], value: processed }
-                        }));
-
-                        if (errors[rule.questionId]) {
-                            setErrors(prev => { const n = { ...prev }; delete n[rule.questionId]; return n; });
-                        }
-                    }
-                }
-            } catch (e) {
-                console.warn('Formula eval error:', expr, e);
-            }
-        }
-    };
-
-
-
-
-
-
     // Helper to find answer code by ID (Recursive search in schema)
     const findAnswerCode = (qId: number, ansId: number, questions: QuestionDto[]): string | null => {
         for (const q of questions) {
             if (q.questionID === qId) {
                 const ans = q.answers?.find(a => a.predefinedAnswerID === ansId);
-                if (ans) return ans.code || ans.answer; // Fallback to answer text if code is missing? Preferably Code.
+                if (ans) return ans.code || ans.answer;
             }
-            // Search in subquestions
             if (q.children) {
                 const res = findAnswerCode(qId, ansId, q.children);
                 if (res) return res;
@@ -174,8 +107,6 @@ export const QuestionnaireRenderer: React.FC<Props> = ({ schema, rules, onChange
     const findAnswerIdByCode = (qId: number, code: string, questions: QuestionDto[]): number | null => {
         for (const q of questions) {
             if (q.questionID === qId) {
-                // Try to match Code, then Answer text if needed? Logic expects Code match.
-                // The DB sends specific Code (e.g. "8").
                 const ans = q.answers?.find(a => a.code === code);
                 if (ans) return ans.predefinedAnswerID;
             }
@@ -195,17 +126,69 @@ export const QuestionnaireRenderer: React.FC<Props> = ({ schema, rules, onChange
         return null;
     };
 
+    const evaluateFormulaRule = (rule: RuleDto) => {
+        if (!rule.formula) return;
+
+        const regex = /\{(\d+)\}/g;
+        let match;
+        const idSet = new Set<number>();
+
+        while ((match = regex.exec(rule.formula)) !== null) {
+            idSet.add(parseInt(match[1], 10));
+        }
+
+        let expr = rule.formula;
+        let allValid = true;
+
+        for (const id of idSet) {
+            const valStr = state[id]?.value;
+            if (valStr) {
+                const val = parseFloat(valStr.replace(',', '.'));
+                if (!isNaN(val)) {
+                    expr = expr.replace(new RegExp(`\\{${id}\\}`, 'g'), val.toString());
+                } else {
+                    allValid = false;
+                    break;
+                }
+            } else {
+                allValid = false;
+                break;
+            }
+        }
+
+        let finalValue = '';
+        if (allValid && idSet.size > 0) {
+            try {
+                // eslint-disable-next-line no-new-func
+                const result = new Function(`return ${expr}`)();
+                if (typeof result === 'number' && !isNaN(result)) {
+                    finalValue = result.toFixed(2);
+                }
+            } catch (e) {
+                console.warn('Formula eval error:', expr, e);
+            }
+        }
+
+        if (state[rule.questionId]?.value !== finalValue) {
+            setState(prev => ({
+                ...prev,
+                [rule.questionId]: { ...prev[rule.questionId], value: finalValue }
+            }));
+            if (finalValue && errors[rule.questionId]) {
+                setErrors(prev => { const n = { ...prev }; delete n[rule.questionId]; return n; });
+            }
+        }
+    };
+
     const evaluateMatrixRule = async (rule: RuleDto) => {
         const inputs = rule.inputQuestionIds;
         if (!inputs || inputs.length === 0) return;
 
-        // Check if all inputs are present in state
         const inputValues: Record<number, string> = {};
         let allPresent = true;
 
         for (const inputId of inputs) {
             const qState = state[inputId];
-            // Matrix usually works with Codes (from radio selections)
             if (qState?.selectedAnswerIds && qState.selectedAnswerIds.length > 0) {
                 const ansId = qState.selectedAnswerIds[0];
                 const code = findAnswerCode(inputId, ansId, schema);
@@ -215,41 +198,34 @@ export const QuestionnaireRenderer: React.FC<Props> = ({ schema, rules, onChange
                     allPresent = false;
                 }
             } else if (qState?.value) {
-                // Text input support?
                 inputValues[inputId] = qState.value;
             } else {
                 allPresent = false;
             }
         }
 
+        let targetAnsId: number | null = null;
         if (allPresent) {
             try {
-                // Import API logic here to avoid top-level import cycle if any, 
-                // but checking imports: 'questionnaireApi' needs valid import.
-                // I'll assume it is imported or available.
-                // Wait, I need to add import to top of file.
-                // For now, I'll use the one I added (questionnaireApi).
                 const result = await questionnaireApi.evaluateRule(rule.ruleId, inputValues);
-
                 if (result.value) {
-                    // Result "value" corresponds to the Code of the target question answer.
-                    // Find the AnswerID for this code.
-                    const targetAnsId = findAnswerIdByCode(rule.questionId, result.value, schema);
-
-                    if (targetAnsId && !state[rule.questionId]?.selectedAnswerIds?.includes(targetAnsId)) {
-                        console.log(`[Rule ${rule.ruleName}] Calculated ${result.value} -> AnsID ${targetAnsId}`);
-                        setState(prev => ({
-                            ...prev,
-                            [rule.questionId]: { ...prev[rule.questionId], selectedAnswerIds: [targetAnsId] }
-                        }));
-                        // Clear error if any
-                        if (errors[rule.questionId]) {
-                            setErrors(prev => { const n = { ...prev }; delete n[rule.questionId]; return n; });
-                        }
-                    }
+                    targetAnsId = findAnswerIdByCode(rule.questionId, result.value, schema);
                 }
             } catch (err) {
                 console.error("Rule evaluation failed", err);
+            }
+        }
+
+        const currentIds = state[rule.questionId]?.selectedAnswerIds || [];
+        const shouldBeIds = targetAnsId ? [targetAnsId] : [];
+
+        if (JSON.stringify(currentIds) !== JSON.stringify(shouldBeIds)) {
+            setState(prev => ({
+                ...prev,
+                [rule.questionId]: { ...prev[rule.questionId], selectedAnswerIds: shouldBeIds }
+            }));
+            if (shouldBeIds.length > 0 && errors[rule.questionId]) {
+                setErrors(prev => { const n = { ...prev }; delete n[rule.questionId]; return n; });
             }
         }
     };
@@ -337,6 +313,25 @@ export const QuestionnaireRenderer: React.FC<Props> = ({ schema, rules, onChange
         }
 
         const error = errors[q.questionID];
+        const valState = state[q.questionID];
+
+        // Collect sub-questions from selected answers
+        const selectedSubQuestions = q.answers?.filter(ans =>
+            valState?.selectedAnswerIds?.includes(ans.predefinedAnswerID)
+        ).flatMap(ans => ans.subQuestions || []) || [];
+
+        // Determine rendering mode:
+        // If question has direct children (e.g. inputs for computed question), render sub-questions at the bottom to maintain flow.
+        // Otherwise (standard question), render sub-questions inline for better UX.
+        const hasDirectChildren = q.children && q.children.length > 0;
+
+        // Combine both into a single list and sort by questionOrder (Only used if hasDirectChildren is true)
+        const allNestedQuestions = hasDirectChildren ? [
+            ...selectedSubQuestions,
+            ...q.children
+        ].sort((a, b) => (a.questionOrder || 0) - (b.questionOrder || 0)) : [];
+
+        const hasNestedContent = allNestedQuestions.length > 0;
 
         return (
             <div key={q.questionID} className={`question-card type-${q.uiControl} ${error ? 'has-error' : ''}`}>
@@ -346,21 +341,25 @@ export const QuestionnaireRenderer: React.FC<Props> = ({ schema, rules, onChange
                 </div>
 
                 <div className="question-body">
-                    {renderControls(q)}
+                    {renderControls(q, hasDirectChildren)}
                 </div>
                 {error && <div className="error-message">{error}</div>}
 
-                {/* Always Visible Children (ParentQuestionID hierarchy) */}
-                {q.children && q.children.length > 0 && (
-                    <div className="children-container">
-                        {q.children.map(child => renderQuestion(child))}
+                {/* Render sorted/merged children ONLY if this is a Group/Computed question with direct children */}
+                {hasDirectChildren && hasNestedContent && (
+                    <div className="nested-questions-container">
+                        {allNestedQuestions.map(nestedQ => (
+                            <div key={`nested_${nestedQ.questionID}`} className="nested-question-wrapper">
+                                {renderQuestion(nestedQ)}
+                            </div>
+                        ))}
                     </div>
                 )}
             </div>
         );
     };
 
-    const renderControls = (q: QuestionDto) => {
+    const renderControls = (q: QuestionDto, hasDirectChildren: boolean) => {
         const controlType = q.uiControl ? q.uiControl.toLowerCase() : 'text';
 
         switch (controlType) {
@@ -398,7 +397,7 @@ export const QuestionnaireRenderer: React.FC<Props> = ({ schema, rules, onChange
 
                 return (
                     <div className="options-list">
-                        {q.answers.map(ans => renderAnswerOption(q, ans, controlType))}
+                        {q.answers.map(ans => renderAnswerOption(q, ans, controlType, hasDirectChildren))}
                     </div>
                 );
             case 'text':
@@ -419,7 +418,7 @@ export const QuestionnaireRenderer: React.FC<Props> = ({ schema, rules, onChange
         }
     };
 
-    const renderAnswerOption = (q: QuestionDto, ans: AnswerDto, controlType: string) => {
+    const renderAnswerOption = (q: QuestionDto, ans: AnswerDto, controlType: string, hasDirectChildren: boolean) => {
         const isSelected = isAnswerSelected(q.questionID, ans.predefinedAnswerID);
         const isCheckbox = controlType.includes('checkbox');
         const inputType = isCheckbox ? 'checkbox' : 'radio';
@@ -436,8 +435,8 @@ export const QuestionnaireRenderer: React.FC<Props> = ({ schema, rules, onChange
                     />
                     <span className="answer-text">{ans.answer}</span>
                 </label>
-                {/* Render Inline Sub-questions if Selected */}
-                {isSelected && ans.subQuestions && ans.subQuestions.length > 0 && (
+                {/* Render Inline Sub-questions if Selected AND NOT a Group Question (hasDirectChildren is false) */}
+                {isSelected && !hasDirectChildren && ans.subQuestions && ans.subQuestions.length > 0 && (
                     <div className="inline-sub-questions">
                         {ans.subQuestions.map(sq => renderQuestion(sq))}
                     </div>
