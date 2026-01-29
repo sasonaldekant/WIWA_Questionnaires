@@ -40,6 +40,12 @@ public class QuestionMetaDto
     public string TypeName { get; set; } = string.Empty;
 }
 
+public class IdentificatorTypeDto
+{
+    public int QuestionnaireIdentificatorTypeID { get; set; }
+    public string Name { get; set; } = string.Empty;
+}
+
 public class QuestionDto
 {
     public int QuestionID { get; set; }

@@ -22,6 +22,13 @@ public class QuestionnaireController : ControllerBase
         return Ok(result);
     }
 
+    [HttpGet("identificator-types")]
+    public async Task<ActionResult<List<IdentificatorTypeDto>>> GetIdentificatorTypes()
+    {
+        var result = await _service.GetIdentificatorTypesAsync();
+        return Ok(result);
+    }
+
     [HttpGet("schema/{typeCode}")]
     public async Task<ActionResult<QuestionnaireSchemaDto>> GetSchema(string typeCode)
     {

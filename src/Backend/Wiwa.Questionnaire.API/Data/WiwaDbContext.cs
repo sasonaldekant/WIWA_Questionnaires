@@ -18,6 +18,10 @@ public class WiwaDbContext : DbContext
     public DbSet<PredefinedAnswer> PredefinedAnswers { get; set; }
     public DbSet<PredefinedAnswerSubQuestion> PredefinedAnswerSubQuestions { get; set; }
     public DbSet<QuestionComputedConfig> QuestionComputedConfigs { get; set; }
+    public DbSet<QuestionnaireIdentificator> QuestionnaireIdentificators { get; set; }
+    public DbSet<QuestionnaireByQuestionnaireIdentificator> QuestionnaireByQuestionnaireIdentificators { get; set; }
+    public DbSet<QuestionnaireAnswer> QuestionnaireAnswers { get; set; }
+    public DbSet<QuestionnaireIdentificatorType> QuestionnaireIdentificatorTypes { get; set; }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
@@ -119,6 +123,50 @@ public class WiwaDbContext : DbContext
                 .WithMany()
                 .HasForeignKey(d => d.QuestionID)
                 .OnDelete(DeleteBehavior.Cascade);
+        });
+        // QuestionnaireIdentificator
+        modelBuilder.Entity<QuestionnaireIdentificator>(entity =>
+        {
+            entity.HasKey(e => e.QuestionnaireIdentificatorID);
+            entity.Property(e => e.Identificator).IsRequired().HasMaxLength(20);
+        });
+
+        // QuestionnaireByQuestionnaireIdentificator
+        modelBuilder.Entity<QuestionnaireByQuestionnaireIdentificator>(entity =>
+        {
+            entity.HasKey(e => e.QuestionnaireByQuestionnaireIdentificatorID);
+
+            entity.HasOne(d => d.QuestionnaireIdentificator)
+                .WithMany(p => p.Questionnaires)
+                .HasForeignKey(d => d.QuestionnaireIdentificatorID)
+                .OnDelete(DeleteBehavior.Cascade);
+
+             entity.HasOne(e => e.QuestionnaireType)
+                .WithMany()
+                .HasForeignKey(d => d.QuestionnaireTypeID)
+                .OnDelete(DeleteBehavior.Restrict);
+        });
+
+        // QuestionnaireAnswer
+        modelBuilder.Entity<QuestionnaireAnswer>(entity =>
+        {
+            entity.HasKey(e => e.QuestionnaireAnswerID);
+            entity.Property(e => e.Answer).HasMaxLength(2000);
+
+            entity.HasOne(d => d.QuestionnaireByQuestionnaireIdentificator)
+                .WithMany(p => p.Answers)
+                .HasForeignKey(d => d.QuestionnaireByQuestionnaireIdentificatorID)
+                .OnDelete(DeleteBehavior.Cascade);
+
+            entity.HasOne(d => d.Question)
+                .WithMany()
+                .HasForeignKey(d => d.QuestionID)
+                .OnDelete(DeleteBehavior.Restrict);
+
+            entity.HasOne(d => d.PredefinedAnswer)
+                .WithMany()
+                .HasForeignKey(d => d.PredefinedAnswerID)
+                .OnDelete(DeleteBehavior.Restrict);
         });
     }
 }

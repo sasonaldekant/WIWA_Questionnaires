@@ -24,6 +24,11 @@ export interface QuestionMetaDto {
     typeName: string;
 }
 
+export interface IdentificatorTypeDto {
+    questionnaireIdentificatorTypeID: number;
+    name: string;
+}
+
 export interface QuestionDto {
     questionID: number;
     questionText: string;
@@ -53,4 +58,17 @@ export interface QuestionnaireState {
         value?: string; // For text inputs
         selectedAnswerIds?: number[]; // For radio/checkbox
     }
+}
+
+export interface AnswerSubmissionDto {
+    value?: string;
+    selectedAnswerIds?: number[];
+}
+
+export interface QuestionnaireSubmissionDto {
+    instanceID?: number;
+    questionnaireTypeID: number;
+    identificatorValue: string;
+    identificatorTypeID: number;
+    answers: Record<number, AnswerSubmissionDto>;
 }

@@ -1,0 +1,24 @@
+{
+    "setup": {
+        "title": "Inicijalizacija Upitnika",
+        "type_label": "Tip Upitnika",
+        "id_type_label": "Tip Identifikatora",
+        "id_value_label": "Identifikator",
+        "button_show": "Prikaži Upitnik",
+        "error_missing_fields": "Molimo izaberite tip upitnika, tip identifikatora i unesite vrednost."
+    },
+    "form": {
+        "type_label": "Tip",
+        "id_label": "ID",
+        "button_change": "Promeni Parametre",
+        "button_save": "Sačuvaj Odgovore",
+        "loading": "Učitavanje...",
+        "error_load": "Greška prilikom učitavanja upitnika.",
+        "success_save": "Podaci su uspešno sačuvani.",
+        "success_update": "Izmene su uspešno sačuvane.",
+        "error_save": "Greška prilikom čuvanja podataka.",
+        "validation_alert": "Proverite da li ste uneli dobro sve podatke.",
+        "error_required": "Ovo polje je obavezno.",
+        "error_format": "Neispravan format."
+    }
+}

@@ -7,11 +7,35 @@ interface Props {
     schema: QuestionDto[]; // List of root questions
     rules?: RuleDto[];
     onChange?: (state: QuestionnaireState) => void;
+    initialState?: QuestionnaireState;
+    readOnly?: boolean; // Global ReadOnly override
+    validationMessages?: {
+        success: string;
+        error: string;
+        required?: string;
+        format?: string;
+    };
 }
 
-export const QuestionnaireRenderer: React.FC<Props> = ({ schema, rules, onChange }) => {
-    const [state, setState] = useState<QuestionnaireState>({});
+export interface QuestionnaireRendererHandle {
+    validate: () => boolean;
+}
+
+export const QuestionnaireRenderer = React.forwardRef<QuestionnaireRendererHandle, Props>(({ schema, rules, onChange, initialState, readOnly = false, validationMessages }, ref) => {
+    const [state, setState] = useState<QuestionnaireState>(initialState || {});
     const [errors, setErrors] = useState<Record<number, string>>({});
+
+    useEffect(() => {
+        if (initialState) {
+            setState(initialState);
+        }
+    }, [initialState]);
+
+    React.useImperativeHandle(ref, () => ({
+        validate: () => {
+            return validateForm();
+        }
+    }));
 
     const validateQuestionValue = (q: QuestionDto, value?: string, selectedAnswerIds?: number[]): string | null => {
         // Skip validation for ReadOnly questions (user cannot fix them directly)
@@ -20,14 +44,14 @@ export const QuestionnaireRenderer: React.FC<Props> = ({ schema, rules, onChange
         const hasValue = (value && value.trim() !== '') || (selectedAnswerIds && selectedAnswerIds.length > 0);
 
         if (q.isRequired && !hasValue) {
-            return 'This field is required.';
+            return validationMessages?.required || 'This field is required.';
         }
 
         if (q.validationPattern && value) {
             try {
                 const regex = new RegExp(q.validationPattern);
                 if (!regex.test(value)) {
-                    return 'Invalid format.';
+                    return validationMessages?.format || 'Invalid format.';
                 }
             } catch (e) {
                 console.warn('Invalid regex pattern:', q.validationPattern);
@@ -257,7 +281,7 @@ export const QuestionnaireRenderer: React.FC<Props> = ({ schema, rules, onChange
         return state[qid]?.selectedAnswerIds?.includes(aid);
     };
 
-    const validateForm = () => {
+    const validateForm = (): boolean => {
         const newErrors: Record<number, string> = {};
         console.log("Validating form...", schema);
 
@@ -293,10 +317,98 @@ export const QuestionnaireRenderer: React.FC<Props> = ({ schema, rules, onChange
         setErrors(newErrors);
 
         if (Object.keys(newErrors).length > 0) {
-            alert(`Validation Failed! Found ${Object.keys(newErrors).length} errors. Please check the form.`);
+            alert(validationMessages?.error || `Validation Failed! Found ${Object.keys(newErrors).length} errors. Please check the form.`);
+            return false;
         } else {
-            alert('Validation Passed! Form is valid.');
+            return true;
         }
+    };
+
+    const renderControls = (q: QuestionDto, hasDirectChildren: boolean) => {
+        const controlType = q.uiControl ? q.uiControl.toLowerCase() : 'text';
+        const isReadOnly = readOnly || q.readOnly;
+
+        switch (controlType) {
+            case 'label':
+                return null;
+            case 'radio':
+            case 'radio button input':
+            case 'boolean':
+            case 'checkbox':
+            case 'checkbox input':
+            case 'select': // Added Select support
+
+                // Safe check for answers
+                if (!q.answers || q.answers.length === 0) return <div className="no-answers">(No answers defined)</div>;
+
+                if (controlType === 'select') {
+                    // Simple select implementation
+                    const selectedValue = state[q.questionID]?.selectedAnswerIds?.[0] || '';
+                    return (
+                        <select
+                            className="text-input"
+                            value={selectedValue}
+                            disabled={isReadOnly}
+                            onChange={(e) => handleAnswerChange(q, Number(e.target.value), 'radio')}
+                        >
+                            <option value="">-- Select --</option>
+                            {q.answers.map(ans => (
+                                <option key={ans.predefinedAnswerID} value={ans.predefinedAnswerID}>
+                                    {ans.answer}
+                                </option>
+                            ))}
+                        </select>
+                    );
+                }
+
+                return (
+                    <div className="options-list">
+                        {q.answers.map(ans => renderAnswerOption(q, ans, controlType, hasDirectChildren, isReadOnly))}
+                    </div>
+                );
+            case 'text':
+            case 'input':
+            case 'text input':
+                return (
+                    <input
+                        type="text"
+                        className="text-input"
+                        value={state[q.questionID]?.value || ''}
+                        readOnly={isReadOnly}
+                        disabled={isReadOnly}
+                        onChange={(e) => handleTextChange(q, e.target.value)}
+                    />
+                );
+            default:
+                return <div>Unknown Control: {q.uiControl}</div>;
+        }
+    };
+
+    const renderAnswerOption = (q: QuestionDto, ans: AnswerDto, controlType: string, hasDirectChildren: boolean, isReadOnly: boolean) => {
+        const isSelected = isAnswerSelected(q.questionID, ans.predefinedAnswerID);
+        const isCheckbox = controlType.includes('checkbox');
+        const inputType = isCheckbox ? 'checkbox' : 'radio';
+
+        return (
+            <div key={ans.predefinedAnswerID} className="answer-wrapper">
+                <label className={`answer-option ${isReadOnly ? 'disabled-option' : ''}`}>
+                    <input
+                        type={inputType}
+                        name={`q_${q.questionID}`}
+                        checked={isSelected || false}
+                        disabled={isReadOnly}
+                        onChange={() => !isReadOnly && handleAnswerChange(q, ans.predefinedAnswerID, inputType)}
+                    />
+                    <span className="answer-text">{ans.answer}</span>
+                </label>
+                {/* Render Inline Sub-questions if Selected AND NOT a Group Question (hasDirectChildren is false) */}
+                {isSelected && !hasDirectChildren && ans.subQuestions && ans.subQuestions.length > 0 && (
+                    <div className="inline-sub-questions">
+                        {ans.subQuestions.map(sq => renderQuestion(sq))}
+                    </div>
+                )}
+            </div>
+        );
     };
 
     const renderQuestion = (q: QuestionDto) => {
@@ -364,92 +476,6 @@ export const QuestionnaireRenderer: React.FC<Props> = ({ schema, rules, onChange
         );
     };
 
-    const renderControls = (q: QuestionDto, hasDirectChildren: boolean) => {
-        const controlType = q.uiControl ? q.uiControl.toLowerCase() : 'text';
-
-        switch (controlType) {
-            case 'label':
-                return null;
-            case 'radio':
-            case 'radio button input':
-            case 'boolean':
-            case 'checkbox':
-            case 'checkbox input':
-            case 'select': // Added Select support
-
-                // Safe check for answers
-                if (!q.answers || q.answers.length === 0) return <div className="no-answers">(No answers defined)</div>;
-
-                if (controlType === 'select') {
-                    // Simple select implementation
-                    const selectedValue = state[q.questionID]?.selectedAnswerIds?.[0] || '';
-                    return (
-                        <select
-                            className="text-input"
-                            value={selectedValue}
-                            disabled={q.readOnly}
-                            onChange={(e) => handleAnswerChange(q, Number(e.target.value), 'radio')}
-                        >
-                            <option value="">-- Select --</option>
-                            {q.answers.map(ans => (
-                                <option key={ans.predefinedAnswerID} value={ans.predefinedAnswerID}>
-                                    {ans.answer}
-                                </option>
-                            ))}
-                        </select>
-                    );
-                }
-
-                return (
-                    <div className="options-list">
-                        {q.answers.map(ans => renderAnswerOption(q, ans, controlType, hasDirectChildren))}
-                    </div>
-                );
-            case 'text':
-            case 'input':
-            case 'text input':
-                return (
-                    <input
-                        type="text"
-                        className="text-input"
-                        value={state[q.questionID]?.value || ''}
-                        readOnly={q.readOnly}
-                        disabled={q.readOnly}
-                        onChange={(e) => handleTextChange(q, e.target.value)}
-                    />
-                );
-            default:
-                return <div>Unknown Control: {q.uiControl}</div>;
-        }
-    };
-
-    const renderAnswerOption = (q: QuestionDto, ans: AnswerDto, controlType: string, hasDirectChildren: boolean) => {
-        const isSelected = isAnswerSelected(q.questionID, ans.predefinedAnswerID);
-        const isCheckbox = controlType.includes('checkbox');
-        const inputType = isCheckbox ? 'checkbox' : 'radio';
-
-        return (
-            <div key={ans.predefinedAnswerID} className="answer-wrapper">
-                <label className={`answer-option ${q.readOnly ? 'disabled-option' : ''}`}>
-                    <input
-                        type={inputType}
-                        name={`q_${q.questionID}`}
-                        checked={isSelected || false}
-                        disabled={q.readOnly}
-                        onChange={() => !q.readOnly && handleAnswerChange(q, ans.predefinedAnswerID, inputType)}
-                    />
-                    <span className="answer-text">{ans.answer}</span>
-                </label>
-                {/* Render Inline Sub-questions if Selected AND NOT a Group Question (hasDirectChildren is false) */}
-                {isSelected && !hasDirectChildren && ans.subQuestions && ans.subQuestions.length > 0 && (
-                    <div className="inline-sub-questions">
-                        {ans.subQuestions.map(sq => renderQuestion(sq))}
-                    </div>
-                )}
-            </div>
-        );
-    };
-
     if (!schema || !Array.isArray(schema)) {
         return <div>No questions to display (Schema is empty or invalid)</div>;
     }
@@ -457,25 +483,6 @@ export const QuestionnaireRenderer: React.FC<Props> = ({ schema, rules, onChange
     return (
         <div className="wiwa-renderer">
             {schema.map(q => renderQuestion(q))}
-
-            <div className="actions-bar">
-                <button className="btn-validate" onClick={validateForm}>Validate Answers</button>
-            </div>
-
-            {/* Debug State - Improved Contrast */}
-            <pre style={{
-                marginTop: 20,
-                padding: 15,
-                fontSize: 12,
-                backgroundColor: '#333',
-                color: '#fff',
-                border: '1px solid #555',
-                borderRadius: 6,
-                overflowX: 'auto',
-                whiteSpace: 'pre-wrap'
-            }}>
-                {JSON.stringify(state, null, 2)}
-            </pre>
         </div>
     );
-};
+});

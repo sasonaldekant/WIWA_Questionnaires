@@ -1,48 +1,67 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useRef } from 'react';
 import './App.css';
 import { questionnaireApi } from './services/apiService';
-import type { QuestionnaireSchemaDto, QuestionTypeDto } from './types/api';
+import type { QuestionnaireSchemaDto, QuestionTypeDto, IdentificatorTypeDto, QuestionnaireSubmissionDto } from './types/api';
 import { QuestionnaireRenderer } from './components/QuestionnaireRenderer';
+import type { QuestionnaireRendererHandle } from './components/QuestionnaireRenderer';
+import i18n from './assets/i18n.json';
 
 interface AppProps {
   embedded?: boolean;
   initialType?: string;
+  initialIdentificator?: string;
+  initialIdentificatorTypeID?: number;
 }
 
-function App({ embedded = false, initialType }: AppProps) {
+function App({
+  embedded = false,
+  initialType,
+  initialIdentificator = '',
+  initialIdentificatorTypeID
+}: AppProps) {
   const [schema, setSchema] = useState<QuestionnaireSchemaDto | null>(null);
   const [types, setTypes] = useState<QuestionTypeDto[]>([]);
+  const [idTypes, setIdTypes] = useState<IdentificatorTypeDto[]>([]);
   const [error, setError] = useState<string>('');
   const [loading, setLoading] = useState(false);
 
-  // If initialType provided, use it. Otherwise default to 'GREAT_QUEST' or empty.
-  const [selectedType, setSelectedType] = useState(initialType || 'GREAT_QUEST');
+  const [selectedType, setSelectedType] = useState(initialType || '');
+  const [idTypeID, setIdTypeID] = useState<number | undefined>(initialIdentificatorTypeID);
+  const [identificator, setIdentificator] = useState(initialIdentificator);
+
+  const [formConfigured, setFormConfigured] = useState(false);
+  const [formState, setFormState] = useState<any>({});
+  const [initialFormState, setInitialFormState] = useState<any>({});
+  const [existingInstanceID, setExistingInstanceID] = useState<number | null>(null);
+  const [isReadOnly, setIsReadOnly] = useState(false);
+  const [showSuccessDialog, setShowSuccessDialog] = useState(false);
+  const [successMessage, setSuccessMessage] = useState('');
+
+  const rendererRef = useRef<QuestionnaireRendererHandle>(null);
 
   useEffect(() => {
-    // In standalone mode, we load types list. In embedded, we might skip this if we know the type.
-    if (!embedded) {
-      loadInitialData();
-    } else if (initialType) {
-      // If embedded and type provided, just load it
-      loadQuestionnaire(initialType);
-    }
-  }, [embedded, initialType]);
+    loadInitialData();
+  }, []);
 
   useEffect(() => {
-    // React to manual selection change (standalone only)
-    if (!embedded && selectedType) {
-      loadQuestionnaire(selectedType);
+    // If props provide everything, auto-configure
+    if (initialType && initialIdentificator && initialIdentificatorTypeID) {
+      handleConfigure();
     }
-  }, [selectedType, embedded]);
+  }, [initialType, initialIdentificator, initialIdentificatorTypeID]);
 
   const loadInitialData = async () => {
     try {
       setLoading(true);
-      const typesData = await questionnaireApi.getTypes();
+      const [typesData, idTypesData] = await Promise.all([
+        questionnaireApi.getTypes(),
+        questionnaireApi.getIdentificatorTypes()
+      ]);
       setTypes(typesData);
-      // Logic: if not embedded and no type selected, pick first
-      if (typesData.length > 0 && !selectedType && !initialType) {
-        setSelectedType(typesData[0].code);
+      setIdTypes(idTypesData);
+
+      if (idTypesData.length > 0 && !idTypeID) {
+        setIdTypeID(idTypesData[0].questionnaireIdentificatorTypeID);
       }
     } catch (err) {
       setError('Failed to load metadata. Is Backend running?');
@@ -52,53 +71,200 @@ function App({ embedded = false, initialType }: AppProps) {
     }
   };
 
-  const loadQuestionnaire = async (type: string) => {
+  const loadQuestionnaire = async (type: string, existingData?: QuestionnaireSubmissionDto | null) => {
     try {
       setSchema(null);
       setError('');
+
       const data = await questionnaireApi.getSchema(type);
       setSchema(data);
+
+      if (existingData) {
+        setInitialFormState(existingData.answers);
+        setFormState(existingData.answers);
+        setExistingInstanceID(existingData.instanceID ?? null);
+        setIsReadOnly(true); // Default to Read Only for existing
+      } else {
+        setInitialFormState({});
+        setFormState({});
+        setExistingInstanceID(null);
+        setIsReadOnly(false);
+      }
     } catch (err) {
-      setError('Failed to load questionnaire content.');
+      setError(i18n.form.error_load);
       console.error(err);
     }
   };
 
+  const handleConfigure = async () => {
+    if (!selectedType || !idTypeID || !identificator) {
+      alert(i18n.setup.error_missing_fields);
+      return;
+    }
+
+    try {
+      setLoading(true);
+      const typeObj = types.find(t => t.code === selectedType);
+      if (!typeObj) throw new Error("Type not found");
+
+      const existing = await questionnaireApi.getExistingSubmission(
+        typeObj.questionnaireTypeID,
+        idTypeID,
+        identificator
+      );
+
+      setFormConfigured(true);
+      await loadQuestionnaire(selectedType, existing);
+
+    } catch (err) {
+      console.error(err);
+      setError("Error during initialization");
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleSubmit = async () => {
+    if (!schema) return;
+
+    if (rendererRef.current) {
+      const isValid = rendererRef.current.validate();
+      if (!isValid) return; // Validation failed
+    }
+
+    const answersPayload: Record<number, { value?: string, selectedAnswerIds?: number[] }> = {};
+
+    Object.keys(formState).forEach(key => {
+      const questionId = Number(key);
+      const val = formState[questionId];
+      if (val) {
+        answersPayload[questionId] = {
+          value: val.value,
+          selectedAnswerIds: val.selectedAnswerIds
+        };
+      }
+    });
+
+    const payload: QuestionnaireSubmissionDto = {
+      instanceID: existingInstanceID || undefined,
+      questionnaireTypeID: schema.questionnaire.typeId,
+      identificatorValue: identificator,
+      identificatorTypeID: idTypeID!,
+      answers: answersPayload
+    };
+
+    try {
+      setLoading(true);
+      let res;
+      if (existingInstanceID) {
+        res = await questionnaireApi.updateQuestionnaire(payload);
+        setSuccessMessage(i18n.form.success_update);
+      } else {
+        res = await questionnaireApi.submitQuestionnaire(payload);
+        setSuccessMessage(i18n.form.success_save);
+      }
+
+      // On success: Lock form and show dialog
+      setIsReadOnly(true);
+      setShowSuccessDialog(true);
+
+    } catch (err) {
+      console.error(err);
+      alert(i18n.form.error_save);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleSuccessClose = () => {
+    setShowSuccessDialog(false);
+    setFormConfigured(false); // Redirect to start
+    setSchema(null);
+  };
+
   return (
     <div className={embedded ? "embedded-container" : "container"}>
-      {!embedded && (
-        <header>
-          <h1>Wiener Städtische - Health Questionnaire</h1>
-          <div style={{ marginTop: 10 }}>
-            <label style={{ marginRight: 10 }}>Izaberite Tip:</label>
-            <select
-              value={selectedType}
-              onChange={(e) => setSelectedType(e.target.value)}
-              style={{ padding: 5, borderRadius: 4 }}
-            >
-              {types.map(t => (
-                <option key={t.code} value={t.code}>{t.name}</option>
-              ))}
-            </select>
+      <header>
+        <h1>Wiener Städtische - Health Questionnaire</h1>
+      </header>
+
+      {/* Success Modal */}
+      {showSuccessDialog && (
+        <div className="modal-overlay">
+          <div className="modal-content">
+            <h3>Uspešno!</h3>
+            <p>{successMessage}</p>
+            <button onClick={handleSuccessClose} className="btn-primary">OK</button>
           </div>
-        </header>
+        </div>
       )}
 
-      <main>
-        {loading && <p>Loading...</p>}
-        {error && <p className="error">{error}</p>}
-
-        {schema && (
-          <div>
-            <h2>{schema.questionnaire.typeName}</h2>
-            <QuestionnaireRenderer
-              schema={schema.questions}
-              rules={schema.rules}
-              onChange={(state) => console.log('Form State:', state)}
-            />
+      {!formConfigured ? (
+        <div className="setup-panel" style={{ padding: 20, border: '1px solid #ddd', borderRadius: 8 }}>
+          <h3>{i18n.setup.title}</h3>
+          <div style={{ marginBottom: 15 }}>
+            <label>{i18n.setup.type_label}: </label>
+            <select value={selectedType} onChange={e => setSelectedType(e.target.value)}>
+              <option value="">-- Izaberi --</option>
+              {types.map(t => <option key={t.code} value={t.code}>{t.name}</option>)}
+            </select>
           </div>
-        )}
-      </main>
+          <div style={{ marginBottom: 15 }}>
+            <label>{i18n.setup.id_type_label}: </label>
+            <select value={idTypeID} onChange={e => setIdTypeID(Number(e.target.value))}>
+              {idTypes.map(it => <option key={it.questionnaireIdentificatorTypeID} value={it.questionnaireIdentificatorTypeID}>{it.name}</option>)}
+            </select>
+          </div>
+          <div style={{ marginBottom: 15 }}>
+            <label>{i18n.setup.id_value_label}: </label>
+            <input type="text" value={identificator} onChange={e => setIdentificator(e.target.value)} placeholder="Npr. Lokacija ABC" />
+          </div>
+          <button onClick={handleConfigure} disabled={loading}>{i18n.setup.button_show}</button>
+        </div>
+      ) : (
+        <main>
+          <div style={{ marginBottom: 20, display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+            <div>
+              <strong>{i18n.form.type_label}:</strong> {schema?.questionnaire.typeName} |
+              <strong> {i18n.form.id_label}:</strong> {identificator}
+              {existingInstanceID && <span style={{ marginLeft: 10, color: '#e30613' }}>(Izmena postojećeg)</span>}
+            </div>
+            <button onClick={() => setFormConfigured(false)}>{i18n.form.button_change}</button>
+          </div>
+          {loading && <p>{i18n.form.loading}</p>}
+          {error && <p className="error">{error}</p>}
+
+          {schema && (
+            <div>
+              <QuestionnaireRenderer
+                ref={rendererRef}
+                schema={schema.questions}
+                rules={schema.rules}
+                initialState={initialFormState}
+                readOnly={isReadOnly}
+                validationMessages={{
+                  success: i18n.form.validation_alert,
+                  error: i18n.form.validation_alert,
+                  required: i18n.form.error_required,
+                  format: i18n.form.error_format
+                }}
+                onChange={(state) => setFormState(state)}
+              />
+              <div className="form-actions" style={{ marginTop: 20 }}>
+                {isReadOnly ? (
+                  <button onClick={() => setIsReadOnly(false)} className="btn-secondary" style={{ marginRight: 10 }}>
+                    Izmeni
+                  </button>
+                ) : (
+                  <button onClick={handleSubmit} className="btn-primary">
+                    {i18n.form.button_save}
+                  </button>
+                )}
+              </div>
+            </div>
+          )}
+        </main>
+      )}
     </div>
   );
 }

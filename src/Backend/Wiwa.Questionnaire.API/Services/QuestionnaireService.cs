@@ -337,6 +337,17 @@ public class QuestionnaireService : IQuestionnaireService
         return new List<int>();
     }
 
+    public async Task<List<IdentificatorTypeDto>> GetIdentificatorTypesAsync()
+    {
+        return await _context.QuestionnaireIdentificatorTypes
+            .Select(t => new IdentificatorTypeDto
+            {
+                QuestionnaireIdentificatorTypeID = t.QuestionnaireIdentificatorTypeID,
+                Name = t.Name
+            })
+            .ToListAsync();
+    }
+
     private string MapFormat(string? code)
     {
         return code?.ToLower() ?? "text";

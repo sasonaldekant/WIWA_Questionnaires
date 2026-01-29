@@ -106,3 +106,9 @@ public class QuestionComputedConfig
     // Navigation
     public Question Question { get; set; } = null!;
 }
+
+public class QuestionnaireIdentificatorType
+{
+    public int QuestionnaireIdentificatorTypeID { get; set; }
+    public string Name { get; set; } = string.Empty;
+}

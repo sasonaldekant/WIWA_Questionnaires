@@ -1,0 +1,19 @@
+### Submit Questionnaire Answer
+POST http://localhost:5238/api/QuestionnaireSubmission
+Content-Type: application/json
+
+{
+  "questionnaireTypeID": 1,
+  "identificatorValue": "TEST-CMD-123",
+  "identificatorTypeID": 1,
+  "answers": {
+    "104": {
+      "value": "180",
+      "selectedAnswerIds": []
+    },
+    "105": {
+      "value": "80",
+      "selectedAnswerIds": []
+    }
+  }
+}
