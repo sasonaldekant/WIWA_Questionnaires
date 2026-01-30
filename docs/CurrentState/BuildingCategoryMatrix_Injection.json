@@ -1,0 +1,69 @@
+{
+    "matrixName": "BuildingCategoryMatrix",
+    "definition": {
+        "keyColumns": [
+            "ExternalWallMaterialID",
+            "ConstructionMaterialID",
+            "RoofCoveringMaterialID"
+        ],
+        "valueColumns": [
+            "ConstructionTypeID"
+        ]
+    },
+    "data": [
+        {
+            "ExternalWallMaterialID": 2,
+            "ConstructionMaterialID": 2,
+            "RoofCoveringMaterialID": 1,
+            "ConstructionTypeID": 6
+        },
+        {
+            "ExternalWallMaterialID": 1,
+            "ConstructionMaterialID": 2,
+            "RoofCoveringMaterialID": 2,
+            "ConstructionTypeID": 7
+        },
+        {
+            "ExternalWallMaterialID": 2,
+            "ConstructionMaterialID": 3,
+            "RoofCoveringMaterialID": 2,
+            "ConstructionTypeID": 7
+        },
+        {
+            "ExternalWallMaterialID": 3,
+            "ConstructionMaterialID": 1,
+            "RoofCoveringMaterialID": 1,
+            "ConstructionTypeID": 7
+        },
+        {
+            "ExternalWallMaterialID": 3,
+            "ConstructionMaterialID": 2,
+            "RoofCoveringMaterialID": 1,
+            "ConstructionTypeID": 7
+        },
+        {
+            "ExternalWallMaterialID": 3,
+            "ConstructionMaterialID": 3,
+            "RoofCoveringMaterialID": 2,
+            "ConstructionTypeID": 7
+        },
+        {
+            "ExternalWallMaterialID": 1,
+            "ConstructionMaterialID": 1,
+            "RoofCoveringMaterialID": 1,
+            "ConstructionTypeID": 8
+        },
+        {
+            "ExternalWallMaterialID": 1,
+            "ConstructionMaterialID": 2,
+            "RoofCoveringMaterialID": 1,
+            "ConstructionTypeID": 8
+        },
+        {
+            "ExternalWallMaterialID": 2,
+            "ConstructionMaterialID": 1,
+            "RoofCoveringMaterialID": 1,
+            "ConstructionTypeID": 8
+        }
+    ]
+}
