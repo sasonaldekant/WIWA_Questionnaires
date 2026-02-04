@@ -1,0 +1,426 @@
+<!DOCTYPE html>
+<html lang="sr">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>WIWA Test Host - Integration Demo</title>
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: system-ui, -apple-system, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background: #f0f2f5;
+        }
+
+        h1 {
+            color: #333;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        .panel {
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        .controls {
+            display: flex;
+            gap: 15px;
+            flex-wrap: wrap;
+            align-items: flex-end;
+        }
+
+        .control-group {
+            display: flex;
+            flex-direction: column;
+            gap: 5px;
+        }
+
+        label {
+            font-weight: 500;
+            font-size: 14px;
+        }
+
+        input,
+        select {
+            padding: 8px 12px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            font-size: 14px;
+        }
+
+        button {
+            padding: 10px 20px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-weight: bold;
+            transition: all 0.2s;
+        }
+
+        .btn-primary {
+            background: #0066cc;
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background: #0052a3;
+        }
+
+        .btn-success {
+            background: #28a745;
+            color: white;
+        }
+
+        .btn-success:hover {
+            background: #1e7e34;
+        }
+
+        .btn-warning {
+            background: #ffc107;
+            color: #212529;
+        }
+
+        .btn-warning:hover {
+            background: #e0a800;
+        }
+
+        .iframe-wrapper {
+            border: 2px solid #ddd;
+            border-radius: 8px;
+            overflow: hidden;
+            background: white;
+        }
+
+        iframe {
+            width: 100%;
+            height: 600px;
+            border: none;
+        }
+
+        .output-panel {
+            display: flex;
+            gap: 20px;
+        }
+
+        .output-panel>div {
+            flex: 1;
+        }
+
+        .log {
+            background: #1e1e1e;
+            color: #d4d4d4;
+            padding: 15px;
+            border-radius: 4px;
+            font-family: 'Consolas', monospace;
+            font-size: 12px;
+            height: 250px;
+            overflow-y: auto;
+        }
+
+        .log-entry {
+            margin-bottom: 8px;
+        }
+
+        .log-time {
+            color: #6a9955;
+        }
+
+        .log-type {
+            font-weight: bold;
+        }
+
+        .log-type.init {
+            color: #4ec9b0;
+        }
+
+        .log-type.ready {
+            color: #9cdcfe;
+        }
+
+        .log-type.complete {
+            color: #4fc1ff;
+        }
+
+        .log-type.error {
+            color: #f14c4c;
+        }
+
+        .log-type.resize {
+            color: #dcdcaa;
+        }
+
+        .result-json {
+            background: #f8f9fa;
+            border: 1px solid #e0e0e0;
+            border-radius: 4px;
+            padding: 15px;
+            font-family: 'Consolas', monospace;
+            font-size: 12px;
+            height: 250px;
+            overflow-y: auto;
+            white-space: pre-wrap;
+        }
+
+        .theme-panel {
+            margin-top: 15px;
+            padding-top: 15px;
+            border-top: 1px solid #eee;
+        }
+
+        .theme-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 10px;
+        }
+
+        .theme-grid input[type="color"] {
+            width: 100%;
+            height: 35px;
+            padding: 0;
+            border: 1px solid #ccc;
+        }
+
+        .status-bar {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 10px;
+            background: #e3f2fd;
+            border-radius: 4px;
+            margin-bottom: 15px;
+        }
+
+        .status-indicator {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            background: #ccc;
+        }
+
+        .status-indicator.ready {
+            background: #4caf50;
+        }
+
+        .status-indicator.waiting {
+            background: #ff9800;
+            animation: pulse 1s infinite;
+        }
+
+        @keyframes pulse {
+
+            0%,
+            100% {
+                opacity: 1;
+            }
+
+            50% {
+                opacity: 0.5;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <h1>🔌 WIWA Questionnaire - Host Integration Test</h1>
+
+        <div class="panel">
+            <h3>Initialization Parameters</h3>
+            <div class="controls">
+                <div class="control-group">
+                    <label>Questionnaire Type:</label>
+                    <select id="qType">
+                        <option value="LOC_QUEST">LOC_QUEST (Lokacija)</option>
+                        <option value="SHORT_QUEST">SHORT_QUEST (Kratki upitnik)</option>
+                        <option value="GREAT_QUEST">GREAT_QUEST (Veliki upitnik)</option>
+                    </select>
+                </div>
+                <div class="control-group">
+                    <label>ID Type:</label>
+                    <select id="idType">
+                        <option value="1">1 - Polisa</option>
+                        <option value="2">2 - JMBG</option>
+                        <option value="3">3 - Lokacija</option>
+                    </select>
+                </div>
+                <div class="control-group">
+                    <label>ID Value:</label>
+                    <input type="text" id="idValue" value="TEST-2024-001" />
+                </div>
+                <div class="control-group">
+                    <label>Instance ID (optional):</label>
+                    <input type="number" id="instanceId" placeholder="Leave empty for new" />
+                </div>
+                <div class="control-group">
+                    <label>Read Only:</label>
+                    <select id="readOnly">
+                        <option value="false">No</option>
+                        <option value="true">Yes</option>
+                    </select>
+                </div>
+            </div>
+
+            <div style="margin-top: 20px; display: flex; gap: 10px;">
+                <button class="btn-primary" onclick="initQuestionnaire()">
+                    📤 Send WIWA_INIT
+                </button>
+                <button class="btn-success" onclick="triggerSubmit()">
+                    💾 Trigger WIWA_SUBMIT
+                </button>
+                <button class="btn-warning" onclick="applyTheme()">
+                    🎨 Apply Custom Theme
+                </button>
+            </div>
+
+            <div class="theme-panel">
+                <h4>Custom Theme (WIWA_THEME)</h4>
+                <div class="theme-grid">
+                    <div class="control-group">
+                        <label>Primary Color:</label>
+                        <input type="color" id="themePrimary" value="#0066cc" />
+                    </div>
+                    <div class="control-group">
+                        <label>Background Color:</label>
+                        <input type="color" id="themeBg" value="#ffffff" />
+                    </div>
+                    <div class="control-group">
+                        <label>Text Color:</label>
+                        <input type="color" id="themeText" value="#333333" />
+                    </div>
+                    <div class="control-group">
+                        <label>Border Radius:</label>
+                        <input type="text" id="themeRadius" value="4px" />
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="status-bar">
+            <div id="statusIndicator" class="status-indicator waiting"></div>
+            <span id="statusText">Čeka se inicijalizacija...</span>
+        </div>
+
+        <div class="iframe-wrapper">
+            <iframe id="wiwaFrame" src="http://localhost:5173"></iframe>
+        </div>
+
+        <div class="panel output-panel">
+            <div>
+                <h3>📋 Message Log</h3>
+                <div id="log" class="log"></div>
+            </div>
+            <div>
+                <h3>📦 Last WIWA_COMPLETE Payload</h3>
+                <div id="result" class="result-json">Čeka se WIWA_COMPLETE...</div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const wiwaFrame = document.getElementById('wiwaFrame');
+        const logEl = document.getElementById('log');
+        const resultEl = document.getElementById('result');
+        const statusIndicator = document.getElementById('statusIndicator');
+        const statusText = document.getElementById('statusText');
+
+        // Listen for messages from iframe
+        window.addEventListener('message', (event) => {
+            const { type, payload } = event.data || {};
+            if (!type?.startsWith('WIWA_')) return; // Only handle WIWA messages
+
+            log(type, payload);
+
+            switch (type) {
+                case 'WIWA_READY':
+                    statusIndicator.className = 'status-indicator ready';
+                    statusText.textContent = 'Upitnik spreman za rad';
+                    break;
+                case 'WIWA_COMPLETE':
+                    resultEl.textContent = JSON.stringify(payload, null, 2);
+                    statusIndicator.className = 'status-indicator ready';
+                    statusText.textContent = `Uspešno sačuvano! Instance ID: ${payload.instanceId}`;
+
+                    // Highlight reference mappings
+                    if (payload.referenceMappings?.length) {
+                        console.log('📊 Reference Mappings:', payload.referenceMappings);
+                    }
+                    break;
+                case 'WIWA_ERROR':
+                    statusIndicator.className = 'status-indicator';
+                    statusText.textContent = `Greška: ${payload.message}`;
+                    break;
+                case 'WIWA_RESIZE':
+                    // Optionally adjust iframe height
+                    // wiwaFrame.style.height = payload.height + 'px';
+                    break;
+            }
+        });
+
+        function log(type, payload) {
+            const time = new Date().toLocaleTimeString();
+            const typeClass = type.replace('WIWA_', '').toLowerCase();
+            const entry = document.createElement('div');
+            entry.className = 'log-entry';
+            entry.innerHTML = `<span class="log-time">[${time}]</span> <span class="log-type ${typeClass}">${type}</span>: ${JSON.stringify(payload).substring(0, 100)}...`;
+            logEl.appendChild(entry);
+            logEl.scrollTop = logEl.scrollHeight;
+        }
+
+        function initQuestionnaire() {
+            const payload = {
+                questionnaireType: document.getElementById('qType').value,
+                identificatorTypeID: parseInt(document.getElementById('idType').value),
+                identificatorValue: document.getElementById('idValue').value,
+                readOnly: document.getElementById('readOnly').value === 'true',
+                contextData: { source: 'test-host', timestamp: Date.now() }
+            };
+
+            const instanceId = document.getElementById('instanceId').value;
+            if (instanceId) {
+                payload.instanceId = parseInt(instanceId);
+            }
+
+            log('WIWA_INIT', payload);
+            wiwaFrame.contentWindow.postMessage({ type: 'WIWA_INIT', payload }, '*');
+
+            statusIndicator.className = 'status-indicator waiting';
+            statusText.textContent = 'Inicijalizacija poslata, čeka se odgovor...';
+        }
+
+        function triggerSubmit() {
+            log('WIWA_SUBMIT', {});
+            wiwaFrame.contentWindow.postMessage({ type: 'WIWA_SUBMIT', payload: {} }, '*');
+        }
+
+        function applyTheme() {
+            const payload = {
+                cssVariables: {
+                    '--wiwa-primary-color': document.getElementById('themePrimary').value,
+                    '--wiwa-background-color': document.getElementById('themeBg').value,
+                    '--wiwa-text-color': document.getElementById('themeText').value,
+                    '--wiwa-border-radius': document.getElementById('themeRadius').value
+                }
+            };
+
+            log('WIWA_THEME', payload);
+            wiwaFrame.contentWindow.postMessage({ type: 'WIWA_THEME', payload }, '*');
+        }
+
+        // Initial log entry
+        log('HOST_INIT', { message: 'Host page loaded, iframe pointing to http://localhost:5173' });
+    </script>
+</body>
+
+</html>

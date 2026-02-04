@@ -105,12 +105,48 @@ public class QuestionnaireService : IQuestionnaireService
             InputQuestionIds = ExtractInputsFromFormula(r.FormulaExpression, inputsMap, r.QuestionID),
         }).ToList();
 
-        return new QuestionnaireSchemaDto
+        var schemaDto = new QuestionnaireSchemaDto
         {
             Questionnaire = new QuestionMetaDto { TypeId = type.QuestionnaireTypeID, TypeName = type.Name },
             Questions = dtos,
             Rules = ruleDtos
         };
+
+        // Inject BuildingCategoryMatrix for Type 1 (Location/Asset) via Mock JSON
+        if (type.QuestionnaireTypeID == 1)
+        {
+            try 
+            {
+                var filePath = System.IO.Path.Combine(System.IO.Directory.GetParent(System.IO.Directory.GetCurrentDirectory())!.Parent!.Parent!.FullName, "docs", "CurrentState", "BuildingCategoryMatrix_Injection.json");
+                if (System.IO.File.Exists(filePath))
+                {
+                    var matrixJson = System.IO.File.ReadAllText(filePath);
+                    var matrix = System.Text.Json.JsonSerializer.Deserialize<MatrixDto>(matrixJson, new System.Text.Json.JsonSerializerOptions { PropertyNameCaseInsensitive = true });
+                    if (matrix != null) schemaDto.Matrices.Add(matrix);
+                }
+            }
+            catch (Exception ex)
+            {
+                // Silently fail or log in mock mode
+                Console.WriteLine($"Error injecting mock matrix: {ex.Message}");
+            }
+        }
+
+        // 6. Load Reference Mappings from database
+        var refMappings = await _context.QuestionReferenceColumns
+            .Include(r => r.QuestionnaireTypeReferenceTable)
+            .Where(r => r.QuestionnaireTypeReferenceTable.QuestionnaireTypeID == type.QuestionnaireTypeID)
+            .Select(r => new ReferenceMappingDto
+            {
+                QuestionId = r.QuestionID,
+                TableName = r.QuestionnaireTypeReferenceTable.TableName,
+                ReferenceColumnName = r.ReferenceColumnName ?? string.Empty
+            })
+            .ToListAsync();
+
+        schemaDto.ReferenceMappings = refMappings;
+
+        return schemaDto;
     }
 
 

@@ -2,6 +2,25 @@ export interface QuestionnaireSchemaDto {
     questionnaire: QuestionMetaDto;
     questions: QuestionDto[];
     rules?: RuleDto[];
+    matrices?: MatrixDto[];
+    referenceMappings?: ReferenceMappingDto[];
+}
+
+export interface ReferenceMappingDto {
+    questionId: number;
+    tableName: string;
+    referenceColumnName: string;
+}
+
+export interface MatrixDto {
+    matrixName: string;
+    definition: MatrixDefinitionDto;
+    data: Record<string, number>[];
+}
+
+export interface MatrixDefinitionDto {
+    keyColumns: string[];
+    valueColumns: string[];
 }
 
 export interface RuleDto {

@@ -1,0 +1,224 @@
+# Embeddable Questionnaire Implementation Plan
+
+Implementacija sistema za ugradnju upitnika u eksterne aplikacije (portale, ERP sisteme) putem iframe-a sa postMessage komunikacijom.
+
+## User Review Required
+
+> [!IMPORTANT]
+> **Autentifikacija i CORS** - Potrebno je definisati:
+> 1. Da li će host aplikacija prosleđivati token za autentifikaciju?
+> 2. Koje domene treba omogućiti u CORS podešavanjima?
+> 
+> Za sada planiram implementaciju BEZ autentifikacije i sa CORS dozvolom za sve domene (`*`) - ovo se može lako promeniti naknadno.
+
+---
+
+## Proposed Changes
+
+### Message Protocol (Frontend)
+
+#### [MODIFY] [messageService.ts](file:///c:/Users/mgasic/Documents/AIProjects/Wiener/WIWA_Questionnaires/src/Frontend/wiwa-questionnaire-fe/src/services/messageService.ts)
+
+Proširenje message protokola sa novim tipovima poruka i payload strukturama:
+
+```typescript
+// Prošireni INIT payload sa svim potrebnim parametrima
+export interface WiwaInitPayload {
+    questionnaireType: string;       // Kod upitnika (npr. 'LOCATION')
+    identificatorTypeID: number;     // Tip identifikatora (JMBG, Polisa, Lokacija...)
+    identificatorValue: string;      // Vrednost identifikatora
+    instanceId?: number;             // Opciono: za učitavanje postojeće instance (EDIT mode)
+    readOnly?: boolean;              // Opciono: za prikaz samo u read-only modu
+    contextData?: Record<string, any>; // Opciono: dodatni podaci od host-a
+}
+
+// Enriched output sa referenciranim vrednostima
+export interface WiwaCompletePayload {
+    success: boolean;
+    instanceId: number;
+    questionnaireType: string;
+    identificatorValue: string;
+    answers: Record<number, { value?: string; selectedAnswerIds?: number[] }>;
+    referenceMappings: ReferenceMappingResult[];  // NOVO: podaci za host aplikaciju
+}
+
+export interface ReferenceMappingResult {
+    questionId: number;
+    tableName: string;
+    referenceColumnName: string;
+    value: string;  // Code odgovora koji mapira na referenciranu kolonu
+}
+
+// Novi message tipovi
+export const MSG_TYPES = {
+    INIT: 'WIWA_INIT',
+    READY: 'WIWA_READY',
+    COMPLETE: 'WIWA_COMPLETE',
+    RESIZE: 'WIWA_RESIZE',
+    SUBMIT: 'WIWA_SUBMIT',    // NOVO: Trigger save iz host-a
+    CANCEL: 'WIWA_CANCEL',    // NOVO: Zatvaranje bez čuvanja
+    ERROR: 'WIWA_ERROR'       // NOVO: Greška u upitniku
+} as const;
+```
+
+---
+
+### Frontend Application Logic
+
+#### [MODIFY] [main.tsx](file:///c:/Users/mgasic/Documents/AIProjects/Wiener/WIWA_Questionnaires/src/Frontend/wiwa-questionnaire-fe/src/main.tsx)
+
+Ažuriranje da prosleđuje kompletne parametre iz INIT poruke:
+
+- Prosleđivanje `identificatorTypeID`, `identificatorValue`, `instanceId`, `readOnly` u [App](file:///c:/Users/mgasic/Documents/AIProjects/Wiener/WIWA_Questionnaires/src/Frontend/wiwa-questionnaire-fe/src/App.tsx#16-310) komponentu
+- Dodavanje listener-a za `WIWA_SUBMIT` poruku
+
+#### [MODIFY] [App.tsx](file:///c:/Users/mgasic/Documents/AIProjects/Wiener/WIWA_Questionnaires/src/Frontend/wiwa-questionnaire-fe/src/App.tsx)
+
+Promene u glavnoj komponenti:
+
+- Prihvatanje novih props-a: `initialInstanceId`, `forceReadOnly`
+- Auto-konfiguracija kada su svi parametri dostupni (preskakanje setup forme)
+- Nova funkcija `handleEmbeddedSubmit` koja vraća enriched JSON host-u
+- Slanje `WIWA_COMPLETE` sa `referenceMappings` nakon uspešnog čuvanja
+- Sakrivanje header-a i nekih UI elemenata u embedded modu
+
+#### [MODIFY] [App.css](file:///c:/Users/mgasic/Documents/AIProjects/Wiener/WIWA_Questionnaires/src/Frontend/wiwa-questionnaire-fe/src/App.css)
+
+Stilovi za embedded container (kompaktniji layout bez header-a).
+
+#### [MODIFY] [api.ts](file:///c:/Users/mgasic/Documents/AIProjects/Wiener/WIWA_Questionnaires/src/Frontend/wiwa-questionnaire-fe/src/types/api.ts)
+
+Dodavanje tipova za reference mappings:
+
+```typescript
+export interface ReferenceMappingDto {
+    questionId: number;
+    tableName: string;
+    referenceColumnName: string;
+}
+```
+
+#### [MODIFY] [apiService.ts](file:///c:/Users/mgasic/Documents/AIProjects/Wiener/WIWA_Questionnaires/src/Frontend/wiwa-questionnaire-fe/src/services/apiService.ts)
+
+- Podrška za konfigurabilnu `API_BASE_URL` (za CORS)
+- Novi endpoint za enriched submit (ako backend to implementira)
+
+---
+
+### Backend Changes
+
+#### [MODIFY] [QuestionnaireSchemaDto](file:///c:/Users/mgasic/Documents/AIProjects/Wiener/WIWA_Questionnaires/src/Backend/Wiwa.Questionnaire.API/DTOs/QuestionnaireSchemaDto.cs)
+
+Dodavanje `ReferenceMappings` property-ja u DTO:
+
+```csharp
+public List<ReferenceMappingDto> ReferenceMappings { get; set; }
+```
+
+#### [NEW] ReferenceMappingDto.cs
+
+```csharp
+public class ReferenceMappingDto
+{
+    public int QuestionId { get; set; }
+    public string TableName { get; set; }
+    public string ReferenceColumnName { get; set; }
+}
+```
+
+#### [MODIFY] [Program.cs](file:///c:/Users/mgasic/Documents/AIProjects/Wiener/WIWA_Questionnaires/src/Backend/Wiwa.Questionnaire.API/Program.cs)
+
+CORS konfiguracija za dozvoljen pristup iz bilo kog origin-a:
+
+```csharp
+builder.Services.AddCors(options =>
+{
+    options.AddDefaultPolicy(policy =>
+    {
+        policy.AllowAnyOrigin()
+              .AllowAnyMethod()
+              .AllowAnyHeader();
+    });
+});
+```
+
+#### [MODIFY] QuestionnaireService.cs
+
+Ažuriranje `GetQuestionnaireByTypeCode` da uključuje reference mappings iz baze.
+
+---
+
+### Test Host Page (za verifikaciju)
+
+#### [NEW] test-host.html
+
+Primer HTML stranice koja demonstrira integraciju:
+
+```html
+<!-- Jednostavna stranica za testiranje embedded upitnika -->
+<iframe id="wiwa-frame" src="http://localhost:5173"></iframe>
+<script>
+  // Primer inicijalizacije i slušanja rezultata
+</script>
+```
+
+---
+
+## Verification Plan
+
+### Manual Testing (Primary)
+
+**Scenario 1: Standalone Mode (Regression)**
+1. Pokrenuti frontend: `cd src/Frontend/wiwa-questionnaire-fe && npm run dev`
+2. Pokrenuti backend: `cd src/Backend && dotnet run --project Wiwa.Questionnaire.API`
+3. Otvoriti `http://localhost:5173` direktno
+4. Popuniti setup formu i verifikovati da upitnik normalno radi
+5. ✅ Očekivano: Postojeća funkcionalnost ostaje nepromenjena
+
+**Scenario 2: Embedded Mode - Create Flow**
+1. Pokrenuti frontend i backend kao gore
+2. Otvoriti test host stranicu: `docs/test-host.html`
+3. Kliknuti "Initialize Questionnaire" dugme
+4. ✅ Očekivano: Upitnik se učitava bez setup forme
+5. Popuniti upitnik i kliknuti Save
+6. ✅ Očekivano: Host prima `WIWA_COMPLETE` sa enriched JSON-om
+
+**Scenario 3: Embedded Mode - Edit Existing**
+1. Prvo kreirati instancu kroz Scenario 2
+2. U test host stranici uneti `instanceId` postojeće instance
+3. Inicijalizovati upitnik
+4. ✅ Očekivano: Upitnik se učitava sa postojećim podacima
+5. Izmeniti podatke i sačuvati
+6. ✅ Očekivano: Host prima ažurirane podatke
+
+**Scenario 4: Reference Mappings Output**
+1. Koristiti "LOCATION" tip upitnika (ima reference mappings)
+2. Popuniti pitanja koja imaju referencirane kolone
+3. Sačuvati upitnik
+4. ✅ Očekivano: JSON output sadrži `referenceMappings` niz sa:
+   - `questionId`, `tableName`, `referenceColumnName`, `value`
+
+---
+
+## Architecture Diagram
+
+```mermaid
+sequenceDiagram
+    participant Host as Host App (Portal/ERP)
+    participant IFrame as WIWA iframe
+    participant API as WIWA Backend
+
+    Host->>IFrame: postMessage(WIWA_INIT, payload)
+    IFrame->>API: GET /schema/{type}
+    API-->>IFrame: QuestionnaireSchemaDto + referenceMappings
+    IFrame-->>Host: postMessage(WIWA_READY)
+    
+    Note over IFrame: User fills questionnaire
+    
+    Host->>IFrame: postMessage(WIWA_SUBMIT) [optional]
+    IFrame->>API: POST /submit
+    API-->>IFrame: { instanceId, success }
+    IFrame-->>Host: postMessage(WIWA_COMPLETE, enrichedPayload)
+    
+    Note over Host: Host processes referenceMappings
+```

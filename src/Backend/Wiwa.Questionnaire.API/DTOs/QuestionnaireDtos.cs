@@ -5,6 +5,8 @@ public class QuestionnaireSchemaDto
     public required QuestionMetaDto Questionnaire { get; set; }
     public List<QuestionDto> Questions { get; set; } = new();
     public List<RuleDto> Rules { get; set; } = new();
+    public List<MatrixDto> Matrices { get; set; } = new();
+    public List<ReferenceMappingDto> ReferenceMappings { get; set; } = new();
 
 }
 
@@ -78,4 +80,28 @@ public class EvaluateRuleRequest
 {
     public int RuleId { get; set; }
     public Dictionary<int, string> Inputs { get; set; } = new();
+}
+
+public class MatrixDto
+{
+    public string MatrixName { get; set; } = string.Empty;
+    public MatrixDefinitionDto Definition { get; set; } = new();
+    public List<Dictionary<string, int>> Data { get; set; } = new();
+}
+
+public class MatrixDefinitionDto
+{
+    public List<string> KeyColumns { get; set; } = new();
+    public List<string> ValueColumns { get; set; } = new();
+}
+
+/// <summary>
+/// Mapiranje pitanja na referencirane tabele.
+/// Koristi se za vraćanje obogaćenih podataka host aplikaciji.
+/// </summary>
+public class ReferenceMappingDto
+{
+    public int QuestionId { get; set; }
+    public string TableName { get; set; } = string.Empty;
+    public string ReferenceColumnName { get; set; } = string.Empty;
 }

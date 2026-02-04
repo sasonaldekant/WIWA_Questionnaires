@@ -1,11 +1,11 @@
 import React, { useState, useEffect } from 'react';
-import type { QuestionDto, AnswerDto, QuestionnaireState, RuleDto } from '../types/api';
-import { questionnaireApi } from '../services/apiService';
+import type { QuestionDto, AnswerDto, QuestionnaireState, RuleDto, MatrixDto } from '../types/api';
 import './QuestionnaireRenderer.css';
 
 interface Props {
     schema: QuestionDto[]; // List of root questions
     rules?: RuleDto[];
+    matrices?: MatrixDto[]; // Data for local lookup
     onChange?: (state: QuestionnaireState) => void;
     initialState?: QuestionnaireState;
     readOnly?: boolean; // Global ReadOnly override
@@ -21,7 +21,8 @@ export interface QuestionnaireRendererHandle {
     validate: () => boolean;
 }
 
-export const QuestionnaireRenderer = React.forwardRef<QuestionnaireRendererHandle, Props>(({ schema, rules, onChange, initialState, readOnly = false, validationMessages }, ref) => {
+export const QuestionnaireRenderer = React.forwardRef<QuestionnaireRendererHandle, Props>((props, ref) => {
+    const { schema, rules, onChange, initialState, readOnly = false, validationMessages } = props;
     const [state, setState] = useState<QuestionnaireState>(initialState || {});
     const [errors, setErrors] = useState<Record<number, string>>({});
 
@@ -207,42 +208,77 @@ export const QuestionnaireRenderer = React.forwardRef<QuestionnaireRendererHandl
         }
     };
 
-    const evaluateMatrixRule = async (rule: RuleDto) => {
+    const evaluateMatrixRule = (rule: RuleDto) => {
         const inputs = rule.inputQuestionIds;
         if (!inputs || inputs.length === 0) return;
 
-        const inputValues: Record<number, string> = {};
+        // 1. Resolve Input Values (Keys)
+        const inputValues: Record<string, number> = {};
+        // We map inputs[i] -> matrix.definition.keyColumns[i]
+
+        // Find the matrix definition
+        const matrix = (rules && props.matrices) ? props.matrices.find(m => m.matrixName === rule.matrixName) : null;
+
+        if (!matrix) {
+            console.warn(`Matrix '${rule.matrixName}' not found in schema.`);
+            return;
+        }
+
+        const keys = matrix.definition.keyColumns;
+        if (inputs.length !== keys.length) {
+            console.warn(`Matrix inputs mismatch: Rule has ${inputs.length}, Matrix has ${keys.length}`);
+            // Attempt partial matching or just proceed? Safer to abort.
+            // return;
+        }
+
         let allPresent = true;
 
-        for (const inputId of inputs) {
+        for (let i = 0; i < inputs.length; i++) {
+            const inputId = inputs[i];
+            const keyCol = keys[i]; // Map by index
             const qState = state[inputId];
+
+            let val: number | null = null;
+
             if (qState?.selectedAnswerIds && qState.selectedAnswerIds.length > 0) {
                 const ansId = qState.selectedAnswerIds[0];
                 const code = findAnswerCode(inputId, ansId, schema);
                 if (code) {
-                    inputValues[inputId] = code;
-                } else {
-                    allPresent = false;
+                    val = parseInt(code, 10);
                 }
             } else if (qState?.value) {
-                inputValues[inputId] = qState.value;
+                val = parseInt(qState.value, 10);
+            }
+
+            if (val !== null && !isNaN(val)) {
+                inputValues[keyCol] = val; // Store by Column Name!
             } else {
                 allPresent = false;
             }
         }
 
         let targetAnsId: number | null = null;
+
         if (allPresent) {
-            try {
-                const result = await questionnaireApi.evaluateRule(rule.ruleId, inputValues);
-                if (result.value) {
-                    targetAnsId = findAnswerIdByCode(rule.questionId, result.value, schema);
+            // 2. Perform Lookup
+            const match = matrix.data.find(row => {
+                // Check if all key columns match
+                return keys.every(k => row[k] === inputValues[k]);
+            });
+
+            if (match) {
+                // 3. Extract Result
+                const resultCol = matrix.definition.valueColumns[0]; // Assuming single value output for now
+                const resultVal = match[resultCol];
+
+                // 4. Map Result Code to Answer ID
+                if (resultVal !== undefined) {
+                    targetAnsId = findAnswerIdByCode(rule.questionId, resultVal.toString(), schema);
                 }
-            } catch (err) {
-                console.error("Rule evaluation failed", err);
             }
         }
 
+        // 5. Update State
         const currentIds = state[rule.questionId]?.selectedAnswerIds || [];
         const shouldBeIds = targetAnsId ? [targetAnsId] : [];
 

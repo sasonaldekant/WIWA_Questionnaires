@@ -112,3 +112,26 @@ public class QuestionnaireIdentificatorType
     public int QuestionnaireIdentificatorTypeID { get; set; }
     public string Name { get; set; } = string.Empty;
 }
+
+public class QuestionnaireTypeReferenceTable
+{
+    public int QuestionnaireTypeReferenceTableID { get; set; }
+    public short QuestionnaireTypeID { get; set; }
+    public string TableName { get; set; } = string.Empty;
+
+    // Navigation
+    public QuestionnaireType QuestionnaireType { get; set; } = null!;
+    public ICollection<QuestionReferenceColumn> QuestionReferenceColumns { get; set; } = new List<QuestionReferenceColumn>();
+}
+
+public class QuestionReferenceColumn
+{
+    public int QuestionReferenceColumnID { get; set; }
+    public int QuestionID { get; set; }
+    public int QuestionnaireTypeReferenceTableID { get; set; }
+    public string? ReferenceColumnName { get; set; }
+
+    // Navigation
+    public Question Question { get; set; } = null!;
+    public QuestionnaireTypeReferenceTable QuestionnaireTypeReferenceTable { get; set; } = null!;
+}

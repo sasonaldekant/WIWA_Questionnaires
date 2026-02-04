@@ -19,12 +19,12 @@ builder.Services.AddDbContext<WiwaDbContext>(options =>
 // Services
 builder.Services.AddScoped<Wiwa.Questionnaire.API.Services.IQuestionnaireService, Wiwa.Questionnaire.API.Services.QuestionnaireService>();
 
-// CORS
+// CORS - Allow any origin for iframe embedding
 builder.Services.AddCors(options =>
 {
     options.AddPolicy("AllowFrontend", policy =>
     {
-        policy.WithOrigins("http://localhost:5173", "http://localhost:5174")
+        policy.AllowAnyOrigin()
               .AllowAnyHeader()
               .AllowAnyMethod();
     });

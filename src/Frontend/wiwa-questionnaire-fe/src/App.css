@@ -1,10 +1,22 @@
 @import url('https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap');
 
 :root {
-  --wiener-red: #e30613;
-  --wiener-dark: #333;
+  /* Theme defaults - can be overridden via WIWA_THEME postMessage */
+  --wiwa-primary-color: #e30613;
+  --wiwa-secondary-color: #333;
+  --wiwa-background-color: #fff;
+  --wiwa-text-color: #333;
+  --wiwa-border-color: #ddd;
+  --wiwa-error-color: #dc3545;
+  --wiwa-success-color: #28a745;
+  --wiwa-font-family: 'Roboto', sans-serif;
+  --wiwa-border-radius: 8px;
+
+  /* Legacy compatibility */
+  --wiener-red: var(--wiwa-primary-color);
+  --wiener-dark: var(--wiwa-secondary-color);
   --wiener-gray: #f5f5f5;
-  --font-family: 'Roboto', sans-serif;
+  --font-family: var(--wiwa-font-family);
 }
 
 body {
@@ -44,10 +56,20 @@ body {
 }
 
 .embedded-container {
+  width: 100%;
   max-width: 100%;
   margin: 0;
-  padding: 20px;
+  padding: 0;
   background: transparent;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.embedded-container .setup-panel {
+  width: 100%;
+  text-align: center;
 }
 
 header h1 {

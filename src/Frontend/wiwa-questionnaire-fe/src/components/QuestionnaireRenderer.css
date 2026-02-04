@@ -6,14 +6,16 @@
 }
 
 .question-card {
-  background: white;
-  color: #1f2937;
+  background: var(--wiwa-background-color, white);
+  color: var(--wiwa-text-color, #1f2937);
   /* Dark gray for visibility */
-  border: 1px solid #e5e7eb;
-  border-radius: 8px;
+  border: 1px solid var(--wiwa-border-color, #e5e7eb);
+  border-radius: var(--wiwa-border-radius, 8px);
   padding: 16px;
   margin-bottom: 16px;
   box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+  width: 100%;
+  box-sizing: border-box;
 }
 
 .question-header {
@@ -55,11 +57,17 @@
 .nested-questions-container {
   margin-top: 15px;
   padding-left: 20px;
-  border-left: 2px solid #e0e0e0;
+  border-left: 2px solid var(--wiwa-primary-color, #e30613);
   display: flex;
   flex-direction: column;
   gap: 16px;
   transition: all 0.3s ease;
+}
+
+display: flex;
+flex-direction: column;
+gap: 16px;
+transition: all 0.3s ease;
 }
 
 .nested-question-wrapper {
@@ -81,11 +89,11 @@
 .text-input {
   width: 100%;
   padding: 8px;
-  border: 1px solid #d1d5db;
-  border-radius: 4px;
-  background-color: #ffffff;
+  border: 1px solid var(--wiwa-border-color, #d1d5db);
+  border-radius: var(--wiwa-border-radius, 4px);
+  background-color: var(--wiwa-background-color, #ffffff);
   /* Force white background */
-  color: #1f2937;
+  color: var(--wiwa-text-color, #1f2937);
   /* Force dark text */
 }
 
@@ -97,12 +105,12 @@
 
 /* Validation Styles */
 .required-mark {
-  color: #ef4444;
+  color: var(--wiwa-error-color, #ef4444);
   margin-left: 4px;
 }
 
 .question-card.has-error {
-  border-color: #ef4444;
+  border-color: var(--wiwa-error-color, #ef4444);
   background-color: #fef2f2;
 }
 
@@ -118,16 +126,22 @@
 }
 
 .btn-validate {
-  background-color: #2563eb;
+  background-color: var(--wiwa-primary-color, #e30613);
   color: white;
   padding: 10px 20px;
   border: none;
-  border-radius: 6px;
+  border-radius: var(--wiwa-border-radius, 6px);
   font-weight: 600;
   cursor: pointer;
   transition: background-color 0.2s;
 }
 
 .btn-validate:hover {
-  background-color: #1d4ed8;
+  filter: brightness(0.85);
+}
+
+/* Theme support for form controls */
+input[type="radio"],
+input[type="checkbox"] {
+  accent-color: var(--wiwa-primary-color, #e30613);
 }

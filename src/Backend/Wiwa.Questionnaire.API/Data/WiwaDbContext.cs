@@ -22,6 +22,8 @@ public class WiwaDbContext : DbContext
     public DbSet<QuestionnaireByQuestionnaireIdentificator> QuestionnaireByQuestionnaireIdentificators { get; set; }
     public DbSet<QuestionnaireAnswer> QuestionnaireAnswers { get; set; }
     public DbSet<QuestionnaireIdentificatorType> QuestionnaireIdentificatorTypes { get; set; }
+    public DbSet<QuestionnaireTypeReferenceTable> QuestionnaireTypeReferenceTables { get; set; }
+    public DbSet<QuestionReferenceColumn> QuestionReferenceColumns { get; set; }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
@@ -167,6 +169,35 @@ public class WiwaDbContext : DbContext
                 .WithMany()
                 .HasForeignKey(d => d.PredefinedAnswerID)
                 .OnDelete(DeleteBehavior.Restrict);
+        });
+
+        // QuestionnaireTypeReferenceTable
+        modelBuilder.Entity<QuestionnaireTypeReferenceTable>(entity =>
+        {
+            entity.HasKey(e => e.QuestionnaireTypeReferenceTableID);
+            entity.Property(e => e.TableName).IsRequired().HasMaxLength(200);
+
+            entity.HasOne(d => d.QuestionnaireType)
+                .WithMany()
+                .HasForeignKey(d => d.QuestionnaireTypeID)
+                .OnDelete(DeleteBehavior.Cascade);
+        });
+
+        // QuestionReferenceColumn
+        modelBuilder.Entity<QuestionReferenceColumn>(entity =>
+        {
+            entity.HasKey(e => e.QuestionReferenceColumnID);
+            entity.Property(e => e.ReferenceColumnName).HasMaxLength(200);
+
+            entity.HasOne(d => d.Question)
+                .WithMany()
+                .HasForeignKey(d => d.QuestionID)
+                .OnDelete(DeleteBehavior.Cascade);
+
+            entity.HasOne(d => d.QuestionnaireTypeReferenceTable)
+                .WithMany(p => p.QuestionReferenceColumns)
+                .HasForeignKey(d => d.QuestionnaireTypeReferenceTableID)
+                .OnDelete(DeleteBehavior.Cascade);
         });
     }
 }
