@@ -24,6 +24,7 @@ public class WiwaDbContext : DbContext
     public DbSet<QuestionnaireIdentificatorType> QuestionnaireIdentificatorTypes { get; set; }
     public DbSet<QuestionnaireTypeReferenceTable> QuestionnaireTypeReferenceTables { get; set; }
     public DbSet<QuestionReferenceColumn> QuestionReferenceColumns { get; set; }
+    public DbSet<FlowLayout> FlowLayouts { get; set; }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
@@ -122,7 +123,7 @@ public class WiwaDbContext : DbContext
             entity.Property(e => e.MatrixOutputColumnName).HasMaxLength(100);
 
             entity.HasOne(d => d.Question)
-                .WithMany()
+                .WithMany(p => p.QuestionComputedConfigs)
                 .HasForeignKey(d => d.QuestionID)
                 .OnDelete(DeleteBehavior.Cascade);
         });
@@ -131,6 +132,11 @@ public class WiwaDbContext : DbContext
         {
             entity.HasKey(e => e.QuestionnaireIdentificatorID);
             entity.Property(e => e.Identificator).IsRequired().HasMaxLength(20);
+
+            entity.HasOne(d => d.QuestionnaireIdentificatorType)
+                .WithMany()
+                .HasForeignKey(d => d.QuestionnaireIdentificatorTypeID)
+                .OnDelete(DeleteBehavior.Restrict);
         });
 
         // QuestionnaireByQuestionnaireIdentificator
@@ -190,7 +196,7 @@ public class WiwaDbContext : DbContext
             entity.Property(e => e.ReferenceColumnName).HasMaxLength(200);
 
             entity.HasOne(d => d.Question)
-                .WithMany()
+                .WithMany(p => p.QuestionReferenceColumns)
                 .HasForeignKey(d => d.QuestionID)
                 .OnDelete(DeleteBehavior.Cascade);
 
@@ -198,6 +204,13 @@ public class WiwaDbContext : DbContext
                 .WithMany(p => p.QuestionReferenceColumns)
                 .HasForeignKey(d => d.QuestionnaireTypeReferenceTableID)
                 .OnDelete(DeleteBehavior.Cascade);
+        });
+
+        // FlowLayout
+        modelBuilder.Entity<FlowLayout>(entity =>
+        {
+            entity.HasKey(e => e.FlowLayoutID);
+            entity.Property(e => e.ElementType).IsRequired().HasMaxLength(50);
         });
     }
 }

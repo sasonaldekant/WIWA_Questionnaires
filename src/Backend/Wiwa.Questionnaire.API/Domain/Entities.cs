@@ -38,12 +38,15 @@ public class Question
     public bool? IsRequired { get; set; }
     public string? ValidationPattern { get; set; }
 
+
     // Navigation
     public QuestionFormat QuestionFormat { get; set; } = null!;
     public ICollection<PredefinedAnswer> PredefinedAnswers { get; set; } = new List<PredefinedAnswer>();
     
     public Question? ParentQuestion { get; set; }
     public ICollection<Question> SubQuestions { get; set; } = new List<Question>();
+    public ICollection<QuestionComputedConfig> QuestionComputedConfigs { get; set; } = new List<QuestionComputedConfig>();
+    public ICollection<QuestionReferenceColumn> QuestionReferenceColumns { get; set; } = new List<QuestionReferenceColumn>();
 }
 
 public class SpecificQuestionType
@@ -69,6 +72,7 @@ public class PredefinedAnswer
     public bool? PreSelected { get; set; }
     public decimal? StatisticalWeight { get; set; }
     public int DisplayOrder { get; set; }
+
 
     // Navigation
     public Question Question { get; set; } = null!;
@@ -113,6 +117,51 @@ public class QuestionnaireIdentificatorType
     public string Name { get; set; } = string.Empty;
 }
 
+public class QuestionnaireIdentificator
+{
+    public long QuestionnaireIdentificatorID { get; set; }
+    public int QuestionnaireIdentificatorTypeID { get; set; }
+    public string Identificator { get; set; } = string.Empty;
+    public int UserID { get; set; }
+    public bool PoliticalPerson { get; set; }
+
+    public QuestionnaireIdentificatorType QuestionnaireIdentificatorType { get; set; } = null!;
+    public ICollection<QuestionnaireByQuestionnaireIdentificator> Questionnaires { get; set; } = new List<QuestionnaireByQuestionnaireIdentificator>();
+}
+
+public class QuestionnaireByQuestionnaireIdentificator
+{
+    public int QuestionnaireByQuestionnaireIdentificatorID { get; set; }
+    public long QuestionnaireIdentificatorID { get; set; }
+    public short QuestionnaireTypeID { get; set; }
+    public System.DateTime StartDateTime { get; set; }
+    public System.DateTime? FinishDateTime { get; set; }
+    public bool? Locked { get; set; }
+    public System.DateTime? LastChange { get; set; }
+
+    public QuestionnaireIdentificator QuestionnaireIdentificator { get; set; } = null!;
+    public QuestionnaireType QuestionnaireType { get; set; } = null!;
+    public ICollection<QuestionnaireAnswer> Answers { get; set; } = new List<QuestionnaireAnswer>();
+}
+
+public class QuestionnaireAnswer
+{
+    public int QuestionnaireAnswerID { get; set; }
+    public int QuestionnaireByQuestionnaireIdentificatorID { get; set; }
+    public int QuestionID { get; set; }
+    // public int? QuestionnaireAnswerID_Parent { get; set; } // Self-referencing if needed
+    public int? PredefinedAnswerID { get; set; }
+    public string? Answer { get; set; }
+    public int? AnswerPoints { get; set; }
+
+    public QuestionnaireByQuestionnaireIdentificator QuestionnaireByQuestionnaireIdentificator { get; set; } = null!;
+    public Question Question { get; set; } = null!;
+    public PredefinedAnswer? PredefinedAnswer { get; set; }
+}
+
+
+
+
 public class QuestionnaireTypeReferenceTable
 {
     public int QuestionnaireTypeReferenceTableID { get; set; }
@@ -134,4 +183,15 @@ public class QuestionReferenceColumn
     // Navigation
     public Question Question { get; set; } = null!;
     public QuestionnaireTypeReferenceTable QuestionnaireTypeReferenceTable { get; set; } = null!;
+}
+
+public class FlowLayout
+{
+    public int FlowLayoutID { get; set; }
+    public short QuestionnaireTypeID { get; set; }
+    public string ElementType { get; set; } = string.Empty; // "Question", "Answer", or "Edge"
+    public string ElementID { get; set; } = string.Empty; // Frontend Node ID or Edge ID
+    public double PositionX { get; set; }
+    public double PositionY { get; set; }
+    public string? Metadata { get; set; } // For handle IDs, colors, etc.
 }

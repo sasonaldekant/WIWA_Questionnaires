@@ -1,0 +1,104 @@
+.answer-node {
+    padding: 6px;
+    border-radius: 4px;
+    background: white;
+    border: 2px solid #52c41a;
+    min-width: 120px;
+    max-width: 180px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    transition: box-shadow 0.2s;
+}
+
+.answer-node:hover {
+    box-shadow: 0 4px 12px rgba(82, 196, 26, 0.3);
+}
+
+.answer-header {
+    background: #52c41a !important;
+    color: white;
+    padding: 3px 6px;
+    border-radius: 3px 3px 0 0;
+    margin: -6px -6px 4px -6px;
+    font-weight: bold;
+    font-size: 10px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.node-delete-btn {
+    background: rgba(255, 255, 255, 0.2);
+    width: 14px;
+    height: 14px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    font-size: 12px;
+    cursor: pointer;
+    transition: background 0.2s;
+    color: white;
+}
+
+.node-delete-btn:hover {
+    background: #ff4d4f;
+}
+
+.node-code {
+    display: inline-block;
+    padding: 2px 4px;
+    background: #e6f7ff;
+    border-radius: 2px;
+    font-size: 9px;
+    color: #1890ff;
+    margin-top: 3px;
+}
+
+.handle-top,
+.handle-bottom,
+.handle-left,
+.handle-right {
+    width: 8px;
+    height: 8px;
+    background: #52c41a;
+    border: 1.5px solid white;
+    transition: opacity 0.2s, background-color 0.2s, width 0.2s, height 0.2s;
+}
+
+/* Make handles definitely visible and overlapping content */
+.handle-top,
+.handle-bottom,
+.handle-left,
+.handle-right {
+    z-index: 100 !important;
+}
+
+/* Make extra handles semi-visible by default */
+.handle-left-pos,
+.handle-right-pos,
+.handle-extra {
+    opacity: 0.5;
+    width: 8px;
+    height: 8px;
+    background-color: #b7eb8f;
+    /* Lighter green for ghosts */
+}
+
+/* Show fully on hover */
+.answer-node:hover .handle-left-pos,
+.answer-node:hover .handle-right-pos,
+.answer-node:hover .handle-extra,
+.handle-left-pos:hover,
+.handle-right-pos:hover,
+.handle-extra:hover {
+    opacity: 1;
+    background-color: #52c41a;
+    /* active color */
+}
+
+/* Make them slightly easier to grab on hover */
+.handle-top:hover,
+.handle-bottom:hover {
+    width: 10px;
+    height: 10px;
+}

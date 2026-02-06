@@ -18,3 +18,8 @@ VERIFY_Questionnaire1_Data.sql
 
 debug_insert_short.sql
 restore_veliki_missing.sql
+build_output.txt
+build_log.txt
+build_error.txt
+build.log
+msbuild.log

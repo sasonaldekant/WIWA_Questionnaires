@@ -1,0 +1,12 @@
+Msg 156, Level 15, State 1, Server MGASIC-LT, Line 12
+Incorrect syntax near the keyword 'WITH'.
+Msg 319, Level 15, State 1, Server MGASIC-LT, Line 12
+Incorrect syntax near the keyword 'with'. If this statement is a common table expression, an xmlnamespaces clause or a change tracking context clause, the previous statement must be terminated with a semicolon.
+Msg 102, Level 15, State 1, Server MGASIC-LT, Line 33
+Incorrect syntax near ')'.
+Msg 156, Level 15, State 1, Server MGASIC-LT, Line 53
+Incorrect syntax near the keyword 'WITH'.
+Msg 319, Level 15, State 1, Server MGASIC-LT, Line 53
+Incorrect syntax near the keyword 'with'. If this statement is a common table expression, an xmlnamespaces clause or a change tracking context clause, the previous statement must be terminated with a semicolon.
+Msg 102, Level 15, State 1, Server MGASIC-LT, Line 67
+Incorrect syntax near ')'.

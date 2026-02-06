@@ -1,0 +1,193 @@
+.question-node {
+  padding: 6px;
+  border-radius: 4px;
+  background: white;
+  border: 2px solid #1890ff;
+  /* Blue for root */
+  min-width: 150px;
+  max-width: 220px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  transition: all 0.3s;
+}
+
+.question-node:hover {
+  box-shadow: 0 4px 12px rgba(24, 144, 255, 0.3);
+}
+
+/* Purple for parent-child (Q→Q) */
+.question-node.parent-child-question {
+  border-color: #722ed1;
+}
+
+.question-node.parent-child-question:hover {
+  box-shadow: 0 4px 12px rgba(114, 46, 209, 0.3);
+}
+
+.question-node.parent-child-question .node-header {
+  background: #722ed1 !important;
+}
+
+/* Orange for subquestion (A→Q) */
+.question-node.subquestion-child {
+  border-color: #fa8c16;
+}
+
+.question-node.subquestion-child:hover {
+  box-shadow: 0 4px 12px rgba(250, 140, 22, 0.3);
+}
+
+.question-node.subquestion-child .node-header {
+  background: #fa8c16 !important;
+}
+
+
+.node-header {
+  background: #1890ff;
+  color: white;
+  padding: 3px 6px;
+  border-radius: 3px 3px 0 0;
+  margin: -6px -6px 4px -6px;
+  font-weight: bold;
+  font-size: 10px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.node-label {
+  flex: 1;
+}
+
+.node-badges {
+  display: flex;
+  gap: 3px;
+  align-items: center;
+}
+
+.node-delete-btn {
+  background: rgba(255, 255, 255, 0.2);
+  width: 14px;
+  height: 14px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  font-size: 12px;
+  cursor: pointer;
+  transition: background 0.2s;
+  margin-left: 5px;
+  color: white;
+}
+
+.node-delete-btn:hover {
+  background: #ff4d4f;
+}
+
+.badge {
+  background: rgba(255, 255, 255, 0.3);
+  padding: 0 3px;
+  border-radius: 2px;
+  font-size: 9px;
+  font-weight: bold;
+}
+
+.badge.required {
+  background: #ff4d4f;
+}
+
+.badge.computed {
+  background: #52c41a;
+}
+
+.node-content {
+  padding: 3px 0;
+}
+
+.node-text {
+  margin: 0;
+  color: #333;
+  font-size: 11px;
+  line-height: 1.3;
+  max-width: 200px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+}
+
+.node-format {
+  display: inline-block;
+  padding: 2px 6px;
+  background: #e6f7ff;
+  border-radius: 3px;
+  font-size: 10px;
+  color: #1890ff;
+  margin-top: 4px;
+}
+
+.handle-top,
+.handle-bottom,
+.handle-left,
+.handle-right {
+  width: 8px;
+  height: 8px;
+  background: #1890ff;
+  border: 1.5px solid white;
+  transition: opacity 0.2s, background-color 0.2s, width 0.2s, height 0.2s;
+}
+
+/* Make handles definitely visible and overlapping content */
+.handle-top,
+.handle-bottom,
+.handle-left,
+.handle-right {
+  z-index: 100 !important;
+}
+
+/* Make extra handles semi-visible by default so users know they exist */
+.handle-left-pos,
+.handle-right-pos,
+.handle-extra {
+  opacity: 0.5;
+  /* Changed from 0 to 0.5 */
+  width: 8px;
+  /* Increased from 6px */
+  height: 8px;
+  /* Increased from 6px */
+  background-color: #91caff;
+  /* Lighter blue for ghosts */
+}
+
+/* Show fully on hover */
+.question-node:hover .handle-left-pos,
+.question-node:hover .handle-right-pos,
+.question-node:hover .handle-extra,
+.handle-left-pos:hover,
+.handle-right-pos:hover,
+.handle-extra:hover {
+  opacity: 1;
+  background-color: #1890ff;
+  /* active color */
+}
+
+/* Make them slightly easier to grab on hover */
+.handle-top:hover,
+.handle-bottom:hover {
+  width: 10px;
+  height: 10px;
+}
+
+.parent-child-question .handle-top,
+.parent-child-question .handle-bottom,
+.parent-child-question .handle-left,
+.parent-child-question .handle-right {
+  background: #722ed1;
+}
+
+.subquestion-child .handle-top,
+.subquestion-child .handle-bottom,
+.subquestion-child .handle-left,
+.subquestion-child .handle-right {
+  background: #fa8c16;
+}
